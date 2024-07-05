@@ -1,0 +1,21 @@
+.pushable {
+  background: var(--buttonColor);
+  border-radius: 12px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 4px;
+}
+.front {
+  display: block;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: red;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.pushable:active .front {
+  transform: translateY(-1px);
+}

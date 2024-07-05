@@ -1,0 +1,27 @@
+.container {
+  width: 100%;
+  aspect-ratio: 520 / 300;
+  color: #fff;
+  background: #000;
+  /* background-image: url("/screen-background.png"); */
+  /* background-repeat: no-repeat;
+  background-size: contain; */
+  padding-bottom: 4px;
+  border-radius: 5px;
+  margin-bottom: 16px;
+}
+
+.element {
+  width: 100%;
+  border-image: url(/TextInput.png) 115 115 115 115 stretch stretch;
+  border-style: inset;
+  border-width: 17px;
+  display: block;
+  width: 40%;
+  height: auto;
+  color: #000;
+}
+
+.content {
+  background: #fff;
+}
