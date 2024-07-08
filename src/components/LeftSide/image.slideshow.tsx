@@ -1,15 +1,14 @@
-"use client";
-
-import styles from "./lower.display.module.css";
-import classnames from "classnames";
+import { getImagesFromObject } from "@/utils/api";
+import styles from "./image.slideshow.module.css";
 import Image from "next/image";
-import { useState } from "react";
 interface ImageSlideShowProps {
-  images: Array<{ url: string; caption: string; alt: string }>;
+  data: any;
+  activeIndex: number;
 }
 
-export default function LowerDisplay({ images }: ImageSlideShowProps) {
-  const { url, caption, alt } = images[0];
+export default function SlideShow({ data, activeIndex }: ImageSlideShowProps) {
+  const images = getImagesFromObject(data.other);
+  const { url, description } = images[activeIndex] || images[0];
   return (
     <div
       id="slideshow"
@@ -17,10 +16,11 @@ export default function LowerDisplay({ images }: ImageSlideShowProps) {
       aria-roledescription="carousel"
       aria-label="Image Slideshow"
       aria-live="polite"
+      className={styles.container}
     >
-      <figure>
-        <Image src={url} alt={alt} fill />
-        <figcaption>{caption}</figcaption>
+      <figure className={styles.container}>
+        <Image src={url} alt={description} fill priority />
+        <figcaption>{description}</figcaption>
       </figure>
     </div>
   );

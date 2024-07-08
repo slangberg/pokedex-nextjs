@@ -29,3 +29,28 @@ export const apiSearch = async <T>({
 
   return (await response.json()) as T;
 };
+
+export const getImagesFromObject = (
+  source: Record<string, any>,
+  parentKey?: string
+): Array<Record<string, any>> => {
+  let clone: Array<Record<string, any>> = [];
+  if (source) {
+    Object.entries(source).forEach(([key, value]) => {
+      if (typeof value === "string") {
+        if (value && !key.includes(".gif")) {
+          const base = parentKey ? `${parentKey}_` : "";
+          const id = base + key;
+          const description = `${parentKey} ${key}`.replace(/_/g, " ").trim();
+          clone.push({ id, url: value, description });
+        }
+      }
+      if (typeof value === "object") {
+        const deep = getImagesFromObject(value, key);
+        clone = [...clone, ...deep];
+      }
+    });
+  }
+
+  return clone;
+};
