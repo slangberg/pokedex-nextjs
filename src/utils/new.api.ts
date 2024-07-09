@@ -19,17 +19,15 @@ export interface APIConfig {
   params?: Record<string, string>;
   error?: string;
 }
+
 export const apiSearch = async <T>({
   url,
   params,
   error,
 }: APIConfig): Promise<T> => {
-  let queryString = "";
-
-  if (params) {
-    const compiled = new URLSearchParams(params).toString();
-    queryString = `?${compiled}`;
-  }
+  const queryString = params
+    ? `?${new URLSearchParams(params).toString()}`
+    : "";
 
   const response = await fetch(`${BASE_URL}/${url}${queryString}`);
 
@@ -37,7 +35,6 @@ export const apiSearch = async <T>({
     if (response.status === 404) {
       throw new Error("not found");
     }
-
     throw new Error(error || "Failed to load data");
   }
 
@@ -48,24 +45,23 @@ export const getNestedUrls = (
   source: Record<string, any>,
   descriptionModifier: (id: string) => string,
   parentKey?: string
-): Array<UrlObject> => {
-  let clone: Array<UrlObject> = [];
-  if (source) {
-    Object.entries(source).forEach(([key, value]) => {
+): UrlObject[] => {
+  const result: UrlObject[] = [];
+
+  const traverse = (obj: Record<string, any>, parent?: string) => {
+    Object.entries(obj).forEach(([key, value]) => {
+      const id = parent ? `${parent}_${key}` : key;
       if (typeof value === "string") {
-        const base = parentKey ? `${parentKey}_` : "";
-        const id = base + key;
         const description = descriptionModifier(id.replace(/_/g, " ").trim());
-        clone.push({ id, url: value, description });
-      }
-      if (typeof value === "object") {
-        const deep = getNestedUrls(value, descriptionModifier, key);
-        clone = [...clone, ...deep];
+        result.push({ id, url: value, description });
+      } else if (typeof value === "object") {
+        traverse(value, id);
       }
     });
-  }
+  };
 
-  return clone;
+  traverse(source, parentKey);
+  return result;
 };
 
 export const fetchFromApi = async ({
@@ -81,7 +77,6 @@ export const fetchFromApi = async ({
     if (response.status === 404) {
       console.error(error);
     }
-
     throw new Error(error || "Failed to load data");
   }
 
@@ -107,7 +102,7 @@ const getEnglishEntry = <T>(data: WithLanguage<T>[]): T | null => {
 };
 
 const normalizeAbilities = async (
-  abilities: Array<{ ability: PokeResource }>
+  abilities: { ability: PokeResource }[]
 ): Promise<Ability[]> => {
   return await Promise.all(
     abilities.map(async (resource) => {
@@ -116,31 +111,34 @@ const normalizeAbilities = async (
         error: resource.ability.name,
       });
 
-      const clone = pick(data, ["id", "is_main_series"]);
-
-      const ability: Partial<Ability> = { ...clone };
+      const ability: Partial<Ability> = pick(data, ["id", "is_main_series"]);
       const effectFull = getEnglishEntry<{
         short_effect: string;
         effect: string;
       }>(data.effect_entries);
-      ability.summary = effectFull?.short_effect;
-      ability.description = effectFull?.effect;
+
+      if (effectFull) {
+        ability.summary = effectFull.short_effect;
+        ability.description = effectFull.effect;
+      }
+
       ability.effect_changes = data.effect_changes.map((effectEntry: any) => ({
         version: effectEntry.version_group.name,
-        description: getEnglishEntry<{
-          short_effect: string;
-          effect: string;
-        }>(effectEntry.effect_entries)?.effect,
+        description: getEnglishEntry<{ short_effect: string; effect: string }>(
+          effectEntry.effect_entries
+        )?.effect,
       }));
+
       ability.flavor_text = getEnglishEntry<{ flavor_text: string }>(
         data.flavor_text_entries
       )?.flavor_text;
+
       return ability as Ability;
     })
   );
 };
 
-const normalizeForms = async (forms: Array<PokeResource>): Promise<Form[]> => {
+const normalizeForms = async (forms: PokeResource[]): Promise<Form[]> => {
   return await Promise.all(
     forms.map(async (resource) => {
       const data = await fetchFromApi({
@@ -148,7 +146,7 @@ const normalizeForms = async (forms: Array<PokeResource>): Promise<Form[]> => {
         error: resource.name,
       });
 
-      const clone = pick(data, [
+      const form: Partial<Form> = pick(data, [
         "id",
         "name",
         "order",
@@ -158,8 +156,8 @@ const normalizeForms = async (forms: Array<PokeResource>): Promise<Form[]> => {
         "form_name",
       ]);
 
-      const form: Partial<Form> = { ...clone };
       form.version = data.version_group.name;
+
       return form as Form;
     })
   );
@@ -168,31 +166,28 @@ const normalizeForms = async (forms: Array<PokeResource>): Promise<Form[]> => {
 const normalizeEvolutionChain = async (
   resource: PokeResource
 ): Promise<Evolution[]> => {
-  const data = await fetchFromApi({
-    url: resource.url,
-    error: resource.name,
-  });
+  const data = await fetchFromApi({ url: resource.url, error: resource.name });
   const result: Evolution[] = [];
 
-  function cleanKeys(
+  const cleanKeys = (
     source: Partial<RawEvolutionDetail>
-  ): Partial<EvolutionDetail> {
+  ): Partial<EvolutionDetail> => {
     if (!source || typeof source !== "object") {
       return source as Partial<EvolutionDetail>;
     }
+
     const clone: Partial<EvolutionDetail> = {};
     for (const [key, value] of Object.entries(source)) {
-      if (value && typeof value === "object" && "name" in value) {
-        // @ts-ignore
-        clone[key as keyof EvolutionDetail] = (value as PokeResource).name;
-      } else {
-        clone[key as keyof EvolutionDetail] = value as any;
-      }
+      clone[key as keyof EvolutionDetail] =
+        value && typeof value === "object" && "name" in value
+          ? (value as PokeResource).name
+          : (value as any);
     }
-    return clone as Partial<EvolutionDetail>;
-  }
 
-  function traverse(node: ChainLink) {
+    return clone;
+  };
+
+  const traverse = (node: ChainLink) => {
     if (!node) return;
 
     const nodeData: Evolution = {
@@ -205,22 +200,17 @@ const normalizeEvolutionChain = async (
     };
     result.push(nodeData);
 
-    if (node.evolves_to.length > 0) {
-      node.evolves_to.forEach((child) => traverse(child));
-    }
-  }
+    node.evolves_to.forEach((child) => traverse(child));
+  };
 
   traverse(data.chain);
   return result;
 };
 
 const normalizeSpecies = async (resource: PokeResource): Promise<Species> => {
-  const data = await fetchFromApi({
-    url: resource.url,
-    error: resource.name,
-  });
+  const data = await fetchFromApi({ url: resource.url, error: resource.name });
 
-  const clone = pick(data, [
+  const species: Partial<Species> = pick(data, [
     "gender_rate",
     "capture_rate",
     "base_happiness",
@@ -231,12 +221,11 @@ const normalizeSpecies = async (resource: PokeResource): Promise<Species> => {
     "has_gender_differences",
     "forms_switchable",
   ]);
-  const species: Partial<Species> = { ...clone };
+
   const growthRate = await fetchFromApi({
     url: data.growth_rate.url,
     error: `${resource.name} growth_rate`,
   });
-
   species.evolution_chain = await normalizeEvolutionChain(data.evolution_chain);
   species.species_id = data.id;
   species.growth_rate = growthRate.levels;
@@ -263,11 +252,13 @@ const normalizeSpecies = async (resource: PokeResource): Promise<Species> => {
   species.description = getEnglishEntry<{ description: string }>(
     data.form_descriptions
   )?.description;
+
   return species as Species;
 };
 
 export const genPokemonData = async (slug: string): Promise<PokemonData> => {
   const source = await apiSearch<any>({ url: `/pokemon/${slug}` });
+
   let base = pick<PokemonData>(source, [
     "id",
     "name",
@@ -285,7 +276,9 @@ export const genPokemonData = async (slug: string): Promise<PokemonData> => {
     getNestedUrls(source.sprites, (id) => `${id} Sprite`),
     "official-artwork_front_default"
   );
+
   const species = await normalizeSpecies(source.species);
   base = { ...base, ...species };
+
   return base as PokemonData;
 };
