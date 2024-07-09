@@ -10,7 +10,7 @@ import {
   RawEvolutionDetail,
   ChainLink,
 } from "@/types/data";
-import { moveObjectToFirstPosition, pick } from "./data";
+import { addSpaces, moveObjectToFirstPosition, pick } from "./data";
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
 
@@ -123,6 +123,7 @@ const normalizeAbilities = async (
         short_effect: string;
         effect: string;
       }>(data.effect_entries);
+      ability.name = addSpaces(data.name);
       ability.summary = effectFull?.short_effect;
       ability.description = effectFull?.effect;
       ability.effect_changes = data.effect_changes.map((effectEntry: any) => ({
@@ -150,7 +151,6 @@ const normalizeForms = async (forms: Array<PokeResource>): Promise<Form[]> => {
 
       const clone = pick(data, [
         "id",
-        "name",
         "order",
         "form_order",
         "is_battle_only",
@@ -159,6 +159,7 @@ const normalizeForms = async (forms: Array<PokeResource>): Promise<Form[]> => {
       ]);
 
       const form: Partial<Form> = { ...clone };
+      form.name = addSpaces(data.name);
       form.version = data.version_group.name;
       return form as Form;
     })
@@ -288,4 +289,9 @@ export const genPokemonData = async (slug: string): Promise<PokemonData> => {
   const species = await normalizeSpecies(source.species);
   base = { ...base, ...species };
   return base as PokemonData;
+};
+
+export const getAllData = async (slug: string) => {
+  const pokemon = await genPokemonData(slug);
+  return pokemon;
 };

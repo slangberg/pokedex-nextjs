@@ -1,7 +1,13 @@
-export type PageProps = {
-  params: Record<string, string | string[]>;
-  searchParams: Record<string, string | string[]>;
+export type PageProps<P = {}, S = {}> = {
+  params: P;
+  searchParams: S;
 };
+
+export interface BaseParams {
+  slug: string;
+}
+
+export type ExtendedPageProps<P = BaseParams, S = {}> = PageProps<P, S>;
 
 export interface LinkConfig {
   type: "link" | "param";

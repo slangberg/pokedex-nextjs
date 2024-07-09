@@ -5,10 +5,11 @@ export default function HomePage() {
   return (
     <MainLayout
       links={[{ url: "#", id: "test", text: "Moves" }]}
-      left={<>Test</>}
+      left={<>PlaceHolder</>}
       mini={<>mini</>}
+      dPadLinks={{}}
     >
-      <h1>Test</h1>
+      <>Test</>
     </MainLayout>
   );
 }

@@ -4,7 +4,7 @@ import styles from "./main.layout.module.css";
 import { DPadConfig } from "@/types/page";
 interface AsideProps {
   left?: JSX.Element;
-  children?: JSX.Element;
+  children?: JSX.Element | undefined;
   mini?: JSX.Element;
   links: Array<{ url: string; id: string; text: string }>;
   dPadLinks: DPadConfig;

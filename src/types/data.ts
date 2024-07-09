@@ -26,6 +26,7 @@ export interface Species {
 }
 
 export interface Form {
+  name: string;
   id: number;
   form_order: number;
   is_battle_only: boolean;
@@ -36,6 +37,7 @@ export interface Form {
 
 export interface Ability {
   id: number;
+  name: string;
   is_main_series: string;
   summary: string;
   description: string;
@@ -116,3 +118,5 @@ export type Evolution = Omit<
   name: string;
   details: EvolutionDetail[];
 };
+
+export type DisplayValue = string | number | boolean | null;

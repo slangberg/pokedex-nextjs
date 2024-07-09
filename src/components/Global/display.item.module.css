@@ -1,0 +1,18 @@
+.container {
+  width: 100%;
+  border-image: url(/TextInput.png) 115 115 115 115 stretch stretch;
+  border-style: inset;
+  border-width: 17px;
+  display: block;
+  height: auto;
+  color: #000;
+  background: #fff;
+  background-clip: padding-box;
+}
+
+.properties {
+  padding: 0;
+  margin: 0;
+  list-style: square;
+  list-style-position: inside;
+}
