@@ -17,11 +17,8 @@ import {
   LinkConfigUnion,
 } from "@/types/page";
 import { IconType } from "react-icons";
-interface DPadProps {
-  config: DPadConfig;
-}
 
-export default function Dpad({ config }: DPadProps) {
+export default function Dpad() {
   const style = {
     "--buttonSize": "2.2rem",
   } as CSSProperties;
@@ -71,7 +68,7 @@ export default function Dpad({ config }: DPadProps) {
       </Link>
     );
   };
-
+  const config = {};
   return (
     <div className={styles.container} style={style}>
       <div className={styles.wrapper}>

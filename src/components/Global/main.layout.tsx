@@ -2,26 +2,27 @@ import LeftSide from "@/components/LeftSide/leftside";
 import RightSide from "@/components/RightSide/right.side";
 import styles from "./main.layout.module.css";
 import { DPadConfig } from "@/types/page";
+import { ReactNode } from "react";
 interface AsideProps {
-  left?: JSX.Element;
-  children?: JSX.Element | undefined;
+  left?: ReactNode;
+  children?: ReactNode | undefined;
   mini?: JSX.Element;
+  title?: string;
   links: Array<{ url: string; id: string; text: string }>;
-  dPadLinks: DPadConfig;
 }
 export default function MainLayout({
   mini,
   left,
   children,
   links,
-  dPadLinks,
+  title,
 }: AsideProps) {
   return (
     <div className={styles.container}>
-      <LeftSide mini={mini} dPadLinks={dPadLinks}>
-        {left}
-      </LeftSide>
-      <RightSide links={links}>{children}</RightSide>
+      <LeftSide mini={mini}>{left}</LeftSide>
+      <RightSide links={links} title={title}>
+        {children}
+      </RightSide>
     </div>
   );
 }

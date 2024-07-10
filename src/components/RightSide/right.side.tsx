@@ -1,21 +1,22 @@
-import { CSSProperties } from "react";
+import { CSSProperties, ReactNode } from "react";
 import styles from "./right.side.module.css";
 import classnames from "classnames";
 import { metalTexture } from "@/utils/styles";
 import ButtonNav from "./button.nav";
 import MainDisplay from "./main.display";
 interface RightSide {
-  children?: JSX.Element;
+  children?: ReactNode;
+  title?: string;
   links: Array<{ url: string; id: string; text: string }>;
 }
 
-export default function Button({ children, links }: RightSide) {
+export default function Button({ children, links, title }: RightSide) {
   return (
     <div className={metalTexture(styles.container)}>
       <div className={styles.cutout} />
       <div className={metalTexture(styles.cutoutOutline)} />
       <div className={styles.body}>
-        <MainDisplay>{children}</MainDisplay>
+        <MainDisplay title={title}>{children}</MainDisplay>
         <ButtonNav links={links} />
       </div>
     </div>

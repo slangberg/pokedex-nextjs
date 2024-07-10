@@ -7,7 +7,6 @@ export default function HomePage() {
       links={[{ url: "#", id: "test", text: "Moves" }]}
       left={<>PlaceHolder</>}
       mini={<>mini</>}
-      dPadLinks={{}}
     >
       <>Test</>
     </MainLayout>

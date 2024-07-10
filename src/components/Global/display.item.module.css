@@ -1,5 +1,5 @@
 .container {
-  width: 100%;
+  /* width: 100%; */
   border-image: url(/TextInput.png) 115 115 115 115 stretch stretch;
   border-style: inset;
   border-width: 17px;
@@ -8,6 +8,15 @@
   color: #000;
   background: #fff;
   background-clip: padding-box;
+  margin: 0 15px 4px 15px;
+}
+
+.title {
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  text-decoration: none;
+  display: flex;
+  align-content: center;
 }
 
 .properties {
@@ -15,4 +24,28 @@
   margin: 0;
   list-style: square;
   list-style-position: inside;
+}
+
+.link {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.linkIcon {
+  margin-right: 5px;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.link:hover,
+.link:focus,
+.link:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+.link:hover {
+  opacity: 0.8;
 }

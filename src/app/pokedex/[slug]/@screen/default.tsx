@@ -1,3 +1,3 @@
 export default function Home() {
-  return <div>Screen</div>;
+  return <>Screen</>;
 }

@@ -12,7 +12,6 @@
   padding-bottom: 4px;
   border-radius: 5px;
   margin-bottom: 16px;
-  padding: 15px;
 }
 
 .container::-webkit-scrollbar {
@@ -28,4 +27,13 @@
 
 .content {
   background: #fff;
+}
+
+.title {
+  background: #000;
+  color: #fff;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+  font-size: 1.5rem;
+  padding: 4px 15px;
 }

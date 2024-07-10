@@ -51,8 +51,26 @@ export const moveObjectToFirstPosition = <T extends Record<string, any>>(
   return array;
 };
 
+export const moveObjectsToFirstPosition = <T extends Record<string, any>>(
+  array: T[],
+  key: string,
+  searchString: string
+): Array<T> => {
+  return array.sort((a, b) => {
+    const aMatch = typeof a[key] === "string" && a[key].includes(searchString);
+    const bMatch = typeof b[key] === "string" && b[key].includes(searchString);
+    if (aMatch && !bMatch) {
+      return -1;
+    }
+    if (!aMatch && bMatch) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
 export const addSpaces = (string: string): string =>
-  string.replace(/_/g, " ").replace(/-/g, " ").trim();
+  capitalizeFirstLetter(string.replace(/_/g, " ").replace(/-/g, " ").trim());
 
 export const convertToItemProps = <
   T extends Record<string, string | number | boolean | null>
@@ -63,3 +81,8 @@ export const convertToItemProps = <
     name: addSpaces(key),
     value: value,
   }));
+
+export const capitalizeFirstLetter = (string: string): string => {
+  if (string.length === 0) return string;
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
