@@ -10,7 +10,12 @@ import {
   RawEvolutionDetail,
   ChainLink,
 } from "@/types/data";
-import { addSpaces, moveObjectToFirstPosition, pick } from "./data";
+import {
+  addSpaces,
+  moveObjectToFirstPosition,
+  moveObjectsToFirstPosition,
+  pick,
+} from "./data";
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
 
@@ -155,11 +160,11 @@ const normalizeForms = async (forms: Array<PokeResource>): Promise<Form[]> => {
         "form_order",
         "is_battle_only",
         "is_mega",
-        "form_name",
+        "name",
       ]);
 
       const form: Partial<Form> = { ...clone };
-      form.name = addSpaces(data.name);
+      form.display_name = addSpaces(data.name);
       form.version = data.version_group.name;
       return form as Form;
     })
@@ -199,6 +204,7 @@ const normalizeEvolutionChain = async (
     const nodeData: Evolution = {
       is_baby: node.is_baby,
       name: node.species.name,
+      displayName: addSpaces(node.species.name),
       details: node.evolution_details.map(({ trigger, ...rest }) => ({
         ...cleanKeys(rest as Partial<RawEvolutionDetail>),
         trigger: trigger.name,
@@ -276,15 +282,17 @@ export const genPokemonData = async (slug: string): Promise<PokemonData> => {
     "is_default",
     "weight",
   ]);
+  base.displayName = addSpaces(source.name);
   base.abilities = await normalizeAbilities(source.abilities);
   base.forms = await normalizeForms(source.forms);
   base.games = source.game_indices.map(
     ({ version }: { version: { name: string } }) => version.name
   );
   base.sounds = getNestedUrls(source.cries, (id) => `${id} cry`);
-  base.images = moveObjectToFirstPosition(
+  base.images = moveObjectsToFirstPosition(
     getNestedUrls(source.sprites, (id) => `${id} Sprite`),
-    "official-artwork_front_default"
+    "id",
+    "official-artwork"
   );
   const species = await normalizeSpecies(source.species);
   base = { ...base, ...species };

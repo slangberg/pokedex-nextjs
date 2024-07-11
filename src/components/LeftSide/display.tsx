@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
 import styles from "./display.module.css";
 import Light from "@/components/Global/light";
 interface DisplayProps {
-  children?: JSX.Element;
+  children?: JSX.Element | ReactNode;
 }
 export default function Display({ children }: DisplayProps) {
   return (

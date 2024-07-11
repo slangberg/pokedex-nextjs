@@ -1,11 +1,14 @@
 import styles from "./image.slideshow.module.css";
 import Image from "next/image";
 interface ImageSlideShowProps {
-  data: any[];
+  data?: any[];
   activeIndex: number;
 }
 
-export default function SlideShow({ data, activeIndex }: ImageSlideShowProps) {
+export default function SlideShow({
+  data = [],
+  activeIndex,
+}: ImageSlideShowProps) {
   const { url, description } = data[activeIndex] || data[0];
   return (
     <div

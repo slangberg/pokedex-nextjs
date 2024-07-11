@@ -5,7 +5,7 @@ import { metalTexture } from "@/utils/styles";
 import ButtonNav from "./button.nav";
 import MainDisplay from "./main.display";
 interface RightSide {
-  children?: JSX.Element;
+  children?: JSX.Element | ReactNode;
   links: Array<{ url: string; id: string; text: string }>;
 }
 
