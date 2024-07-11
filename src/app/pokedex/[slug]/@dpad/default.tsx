@@ -38,5 +38,6 @@ export default async function DpadView({
   const { images } = await getAllData(slug);
   const activeIndex = imageIndex ? Number(imageIndex) : 0;
   const dPadLinks = genDpadLinks(images, activeIndex);
+  console.log({ img: images.length, activeIndex, dPadLinks });
   return <Dpad config={dPadLinks} />;
 }

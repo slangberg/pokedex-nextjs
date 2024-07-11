@@ -1,3 +1,4 @@
+"use client";
 import { BaseParams, ExtendedPageProps } from "@/types/page";
 import SlideShow from "@/components/LeftSide/image.slideshow";
 import { getAllData } from "@/utils/api";

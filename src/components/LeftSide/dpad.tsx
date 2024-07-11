@@ -28,7 +28,7 @@ export default function Dpad({ config }: DPadProps) {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   const genButton = (
     className: string,
@@ -53,7 +53,7 @@ export default function Dpad({ config }: DPadProps) {
           className={className}
           onClick={() => {
             params.set(paramValue, value.toString());
-            replace(`${pathname}?${params.toString()}`);
+            push(`${pathname}?${params.toString()}`);
           }}
         >
           <Icon className={styles.icon} />
