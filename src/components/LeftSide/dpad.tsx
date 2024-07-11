@@ -17,18 +17,47 @@ import {
   LinkConfigUnion,
 } from "@/types/page";
 import { IconType } from "react-icons";
+import { UrlObject } from "@/types/data";
+import { usePageIndex } from "@/utils/route";
 interface DPadProps {
-  config: DPadConfig;
+  images?: UrlObject[];
 }
 
-export default function Dpad({ config }: DPadProps) {
+const genDpadLinks = (images: UrlObject[], activeIndex: number): DPadConfig => {
+  if (!images?.length) {
+    return {};
+  } else {
+    const imageCount = images.length;
+    const nextIndex = activeIndex + 1 < imageCount ? activeIndex + 1 : 0;
+    const previousIndex =
+      activeIndex - 1 >= 0 ? activeIndex - 1 : imageCount - 1;
+    return {
+      left: {
+        type: "param",
+        value: previousIndex,
+        description: `Show image ${images[previousIndex].description}`,
+        paramValue: "imageIndex",
+      },
+      right: {
+        type: "param",
+        value: nextIndex,
+        description: `Show image ${images[nextIndex].description}`,
+        paramValue: "imageIndex",
+      },
+    };
+  }
+};
+
+export default function Dpad({ images = [] }: DPadProps) {
   const style = {
     "--buttonSize": "2.2rem",
   } as CSSProperties;
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { push } = useRouter();
+  const { replace } = useRouter();
+  const activeIndex = usePageIndex();
+  const localConfig = genDpadLinks(images, activeIndex);
 
   const genButton = (
     className: string,
@@ -53,7 +82,7 @@ export default function Dpad({ config }: DPadProps) {
           className={className}
           onClick={() => {
             params.set(paramValue, value.toString());
-            push(`${pathname}?${params.toString()}`);
+            replace(`${pathname}?${params.toString()}`);
           }}
         >
           <Icon className={styles.icon} />
@@ -78,10 +107,10 @@ export default function Dpad({ config }: DPadProps) {
         <div className={styles.center}>
           <div className={styles.centerCircle}></div>
         </div>
-        {genButton(styles.up, FaAngleUp, config.up)}
-        {genButton(styles.right, FaAngleRight, config.right)}
-        {genButton(styles.down, FaAngleDown, config.down)}
-        {genButton(styles.left, FaAngleLeft, config.left)}
+        {genButton(styles.up, FaAngleUp, localConfig.up)}
+        {genButton(styles.right, FaAngleRight, localConfig.right)}
+        {genButton(styles.down, FaAngleDown, localConfig.down)}
+        {genButton(styles.left, FaAngleLeft, localConfig.left)}
       </div>
     </div>
   );

@@ -77,10 +77,20 @@ export const convertToItemProps = <
 >(
   source: T
 ): Array<{ name: string; value: DisplayValue }> =>
-  Object.entries(source).map(([key, value]) => ({
-    name: addSpaces(key),
-    value: value,
-  }));
+  Object.entries(source)
+    .filter(([_key, value]) => value !== null)
+    .map(([key, value]) => {
+      const name = addSpaces(key);
+      const valueOutput = !value
+        ? "None"
+        : typeof value === "string"
+        ? addSpaces(key)
+        : value;
+      return {
+        name,
+        value: valueOutput,
+      };
+    });
 
 export const capitalizeFirstLetter = (string: string): string => {
   if (string.length === 0) return string;
