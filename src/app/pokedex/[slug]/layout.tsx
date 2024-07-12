@@ -7,8 +7,9 @@ import {
   ExtendedPageProps,
   PageProps,
 } from "@/types/page";
-import { genPokemonData, getAllData } from "@/utils/api";
-
+import { getAllData } from "@/utils/api";
+import ClientSlideshow from "@/components/LeftSide/image.slideshow.client";
+import ClientDpad from "@/components/LeftSide/dpad.client";
 const genDpadLinks = (images: UrlObject[], activeIndex: number): DPadConfig => {
   if (!images?.length) {
     return {};
@@ -36,12 +37,14 @@ const genDpadLinks = (images: UrlObject[], activeIndex: number): DPadConfig => {
 
 type LayoutProps = ExtendedPageProps<BaseParams, { imageIndex: string }> & {
   screen: JSX.Element;
+  slideshow: JSX.Element;
 };
 
 export default async function PokemonPageLayout({
   params,
   searchParams,
   screen,
+  slideshow,
 }: LayoutProps) {
   const slug = params.slug;
   console.log({ searchParams });
@@ -52,18 +55,9 @@ export default async function PokemonPageLayout({
   const dpadLinks = genDpadLinks(data?.images || [], activeIndex);
   return (
     <MainLayout
-      links={[
-        { url: `/pokedex/${slug}/forms`, id: "forms", text: "Forms" },
-        { url: `/pokedex/${slug}/games`, id: "games", text: "Games" },
-        {
-          url: `/pokedex/${slug}/abilities`,
-          id: "abilities",
-          text: "Abilities",
-        },
-      ]}
-      left={<SlideShow data={data?.images || []} activeIndex={activeIndex} />}
+      left={<ClientSlideshow data={data.images} />}
       mini={<>mini</>}
-      dPadLinks={dpadLinks}
+      dpad={<ClientDpad images={data.images} />}
     >
       {screen}
     </MainLayout>

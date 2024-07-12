@@ -11,13 +11,9 @@ import { DPadConfig } from "@/types/page";
 interface LefSideProps {
   children?: JSX.Element;
   mini?: JSX.Element;
-  dPadLinks: DPadConfig;
+  dpad: JSX.Element;
 }
-export default async function LeftSide({
-  children,
-  mini,
-  dPadLinks,
-}: LefSideProps) {
+export default async function LeftSide({ children, mini, dpad }: LefSideProps) {
   return (
     <div className={metalTexture(styles.container)}>
       <div className={styles.header}>
@@ -40,7 +36,7 @@ export default async function LeftSide({
         </div>
         <div className={styles.leftSideControls}>
           <LowerDisplay>{mini}</LowerDisplay>
-          <Dpad config={dPadLinks} />
+          {dpad}
         </div>
       </div>
     </div>

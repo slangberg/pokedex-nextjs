@@ -1,18 +1,31 @@
-import { CSSProperties } from "react";
 import styles from "./button.nav.module.css";
-import classnames from "classnames";
-import Link from "next/link";
-interface ButtonNavProps {
-  links: Array<{ url: string; id: string; text: string }>;
-}
-
-export default function ButtonNav({ links }: ButtonNavProps) {
+import NavLink from "./main.nav.link";
+const links: Array<{ url: string; id: string; text: string }> = [
+  { url: ``, id: "overview", text: "Overview" },
+  {
+    url: `forms`,
+    id: "forms",
+    text: "Forms",
+  },
+  { url: `games`, id: "games", text: "Games" },
+  {
+    url: ``,
+    id: "abilities",
+    text: "Abilities",
+  },
+  {
+    url: `evolutions`,
+    id: "evolutions",
+    text: "Evolutions",
+  },
+];
+export default function ButtonNav() {
   return (
     <nav className={styles.container}>
       {links.map(({ url, id, text }) => (
-        <Link href={url} key={id} className={styles.link}>
+        <NavLink path={url} key={id}>
           {text}
-        </Link>
+        </NavLink>
       ))}
     </nav>
   );
