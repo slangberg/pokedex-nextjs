@@ -7,7 +7,14 @@ export interface BaseParams {
   slug: string;
 }
 
-export type ExtendedPageProps<P = BaseParams, S = {}> = PageProps<P, S>;
+export interface SearchParams {
+  imageIndex?: string;
+}
+
+export type ExtendedPageProps<P = BaseParams, S = SearchParams> = PageProps<
+  P,
+  S
+>;
 
 export interface LinkConfig {
   type: "link" | "param";

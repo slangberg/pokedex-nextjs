@@ -9,29 +9,39 @@ import {
   FaAngleUp,
 } from "react-icons/fa";
 import Link from "next/link";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import {
-  DPadConfig,
-  LinkConfig,
-  LinkConfigParam,
-  LinkConfigUnion,
-} from "@/types/page";
+  useSearchParams,
+  usePathname,
+  useRouter,
+  useParams,
+} from "next/navigation";
+import { DPadConfig, LinkConfigParam, LinkConfigUnion } from "@/types/page";
 import { IconType } from "react-icons";
 import { UrlObject } from "@/types/data";
-import { usePageIndex } from "@/utils/route";
+import { usePageIndex, usePokemonIndexes } from "@/utils/route";
+import { PokeResource } from "../../types/data";
 interface DPadProps {
   images?: UrlObject[];
+  pokemon?: PokeResource[];
 }
 
-const genDpadLinks = (images: UrlObject[], activeIndex: number): DPadConfig => {
+const genDpadLinks = (
+  images: UrlObject[],
+  imageIndex: number,
+  pokemonIndexes: { nextPokemon: string | null; prevPokemon: string | null }
+): DPadConfig => {
   if (!images?.length) {
     return {};
   } else {
     const imageCount = images.length;
-    const nextIndex = activeIndex + 1 < imageCount ? activeIndex + 1 : 0;
-    const previousIndex =
-      activeIndex - 1 >= 0 ? activeIndex - 1 : imageCount - 1;
+    const nextIndex = imageIndex + 1 < imageCount ? imageIndex + 1 : 0;
+    const previousIndex = imageIndex - 1 >= 0 ? imageIndex - 1 : imageCount - 1;
     return {
+      up: {
+        type: "link",
+        value: `/pokedex/${pokemonIndexes.prevPokemon}`,
+        description: `Go to ${pokemonIndexes.prevPokemon}`,
+      },
       left: {
         type: "param",
         value: previousIndex,
@@ -44,20 +54,26 @@ const genDpadLinks = (images: UrlObject[], activeIndex: number): DPadConfig => {
         description: `Show image ${images[nextIndex].description}`,
         paramValue: "imageIndex",
       },
+      down: {
+        type: "link",
+        value: `/pokedex/${pokemonIndexes.nextPokemon}`,
+        description: `Go to ${pokemonIndexes.nextPokemon}`,
+      },
     };
   }
 };
 
-export default function Dpad({ images = [] }: DPadProps) {
+export default function Dpad({ images = [], pokemon = [] }: DPadProps) {
   const style = {
     "--buttonSize": "2.2rem",
   } as CSSProperties;
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const pokemonIndexes = usePokemonIndexes(pokemon);
   const { replace } = useRouter();
   const activeIndex = usePageIndex();
-  const localConfig = genDpadLinks(images, activeIndex);
+  const localConfig = genDpadLinks(images, activeIndex, pokemonIndexes);
 
   const genButton = (
     className: string,
@@ -96,7 +112,7 @@ export default function Dpad({ images = [] }: DPadProps) {
         className={className}
         href={value.toString()}
       >
-        <FaAngleUp className={styles.icon} />
+        <Icon className={styles.icon} />
       </Link>
     );
   };

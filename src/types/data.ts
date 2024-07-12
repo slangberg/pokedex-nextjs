@@ -26,6 +26,7 @@ export interface Species {
 }
 
 export interface Form {
+  display_name: string;
   name: string;
   id: number;
   form_order: number;
@@ -54,6 +55,7 @@ export interface PokemonData extends Species {
   id: number;
   name: string;
   height: number;
+  display_name: string;
   is_default: boolean;
   forms: Form[];
   games: string[];
@@ -116,6 +118,7 @@ export type Evolution = Omit<
   "species" | "evolution_details" | "evolves_to"
 > & {
   name: string;
+  display_name: string;
   details: EvolutionDetail[];
 };
 

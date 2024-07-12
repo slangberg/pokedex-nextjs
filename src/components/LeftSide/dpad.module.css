@@ -13,7 +13,8 @@
 }
 
 .wrapper > div,
-.wrapper > button {
+.wrapper > button,
+.wrapper > a {
   padding: 0;
   margin: 0;
   width: var(--buttonSize);

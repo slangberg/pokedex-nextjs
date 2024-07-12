@@ -10,24 +10,19 @@ import {
   RawEvolutionDetail,
   ChainLink,
 } from "@/types/data";
-import {
-  addSpaces,
-  moveObjectToFirstPosition,
-  moveObjectsToFirstPosition,
-  pick,
-} from "./data";
-
-const BASE_URL = "https://pokeapi.co/api/v2/";
+import { addSpaces, moveObjectsToFirstPosition, pick } from "./data";
 
 export interface APIConfig {
   url: string;
   params?: Record<string, string>;
   error?: string;
+  key?: string;
 }
 export const apiSearch = async <T>({
   url,
   params,
   error,
+  key,
 }: APIConfig): Promise<T> => {
   let queryString = "";
 
@@ -36,7 +31,7 @@ export const apiSearch = async <T>({
     queryString = `?${compiled}`;
   }
 
-  const response = await fetch(`${BASE_URL}/${url}${queryString}`);
+  const response = await fetch(`${url}${queryString}`);
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -46,7 +41,9 @@ export const apiSearch = async <T>({
     throw new Error(error || "Failed to load data");
   }
 
-  return (await response.json()) as T;
+  const data = await response.json();
+
+  return key ? data[key] : (data as T);
 };
 
 export const getNestedUrls = (
@@ -204,7 +201,7 @@ const normalizeEvolutionChain = async (
     const nodeData: Evolution = {
       is_baby: node.is_baby,
       name: node.species.name,
-      displayName: addSpaces(node.species.name),
+      display_name: addSpaces(node.species.name),
       details: node.evolution_details.map(({ trigger, ...rest }) => ({
         ...cleanKeys(rest as Partial<RawEvolutionDetail>),
         trigger: trigger.name,
@@ -274,7 +271,9 @@ const normalizeSpecies = async (resource: PokeResource): Promise<Species> => {
 };
 
 export const genPokemonData = async (slug: string): Promise<PokemonData> => {
-  const source = await apiSearch<any>({ url: `/pokemon/${slug}` });
+  const source = await apiSearch<any>({
+    url: `https://pokeapi.co/api/v2/pokemon/${slug}`,
+  });
   let base = pick<PokemonData>(source, [
     "id",
     "name",
@@ -282,7 +281,7 @@ export const genPokemonData = async (slug: string): Promise<PokemonData> => {
     "is_default",
     "weight",
   ]);
-  base.displayName = addSpaces(source.name);
+  base.display_name = addSpaces(source.name);
   base.abilities = await normalizeAbilities(source.abilities);
   base.forms = await normalizeForms(source.forms);
   base.games = source.game_indices.map(

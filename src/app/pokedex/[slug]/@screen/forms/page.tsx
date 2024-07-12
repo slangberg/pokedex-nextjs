@@ -2,18 +2,29 @@ import DisplayItem from "@/components/Global/display.item";
 import { ExtendedPageProps } from "@/types/page";
 import { getAllData } from "@/utils/api";
 import { convertToItemProps } from "@/utils/data";
-export default async function AbilitiesScreen({
+import { Metadata } from "next";
+
+export async function generateMetadata({
   params,
-  searchParams,
-}: ExtendedPageProps) {
+}: ExtendedPageProps): Promise<Metadata> {
+  const slug = params.slug;
+  const data = await getAllData(slug);
+  return {
+    title: `${data.display_name} - Evolutions`,
+    description: `Pokedex entry for the abilities of ${data.display_name}`,
+  };
+}
+
+export default async function AbilitiesScreen({ params }: ExtendedPageProps) {
   const slug = params.slug;
   const { forms } = await getAllData(slug);
-  console.log({ searchParams });
   return (
     <>
-      {forms.map(({ name, id, ...rest }) => {
+      {forms.map(({ name, display_name, id, ...rest }) => {
         const props = convertToItemProps(rest);
-        return <DisplayItem key={name} title={name} properties={props} />;
+        return (
+          <DisplayItem key={name} title={display_name} properties={props} />
+        );
       })}
     </>
   );

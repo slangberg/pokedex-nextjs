@@ -1,12 +1,8 @@
 import { metalTexture } from "@/utils/styles";
 import styles from "./leftside.module.css";
-
-import { apiSearch } from "@/utils/api";
 import Light from "@/components/Global/light";
 import Display from "./display";
-import Dpad from "./dpad";
 import LowerDisplay from "./lower.display";
-import { DPadConfig } from "@/types/page";
 
 interface LefSideProps {
   children?: JSX.Element;
@@ -25,7 +21,6 @@ export default async function LeftSide({ children, mini, dpad }: LefSideProps) {
             <Light size={15} color="#ffc334" />
           </div>
         </div>
-        <div className={metalTexture(styles.dexInfoRight)}></div>
       </div>
       <div className={styles.body}>
         <Display>{children}</Display>

@@ -9,7 +9,7 @@ const links: Array<{ url: string; id: string; text: string }> = [
   },
   { url: `games`, id: "games", text: "Games" },
   {
-    url: ``,
+    url: `abilities`,
     id: "abilities",
     text: "Abilities",
   },
