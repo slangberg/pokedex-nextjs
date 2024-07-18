@@ -25,15 +25,18 @@ export default function SlideShow({ data = [] }: ImageSlideShowProps) {
       className={styles.container}
     >
       <figure className={styles.container}>
-        <Image
-          src={url}
-          alt={description}
-          fill
-          priority
-          sizes="300px, 300px"
-          style={{ objectFit: "contain" }}
-        />
-        <figcaption>{description}</figcaption>
+        <div className={styles.image}>
+          <Image
+            src={url}
+            alt={description}
+            fill
+            priority
+            id="slide-image"
+            sizes="300px, 300px"
+            style={{ objectFit: "contain" }}
+          />
+        </div>
+        <figcaption className={styles.title}>{description}</figcaption>
       </figure>
     </div>
   );

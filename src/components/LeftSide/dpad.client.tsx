@@ -15,7 +15,12 @@ import {
   useRouter,
   useParams,
 } from "next/navigation";
-import { DPadConfig, LinkConfigParam, LinkConfigUnion } from "@/types/page";
+import {
+  DPadConfig,
+  LinkConfigParam,
+  LinkConfigUnion,
+  ListData,
+} from "@/types/page";
 import { IconType } from "react-icons";
 import { UrlObject } from "@/types/data";
 import { usePageIndex, usePokemonIndexes } from "@/utils/route";
@@ -28,20 +33,27 @@ interface DPadProps {
 const genDpadLinks = (
   images: UrlObject[],
   imageIndex: number,
-  pokemonIndexes: { nextPokemon: string | null; prevPokemon: string | null }
+  pokemonIndexes: ListData
 ): DPadConfig => {
-  if (!images?.length) {
-    return {};
-  } else {
-    const imageCount = images.length;
-    const nextIndex = imageIndex + 1 < imageCount ? imageIndex + 1 : 0;
-    const previousIndex = imageIndex - 1 >= 0 ? imageIndex - 1 : imageCount - 1;
-    return {
-      up: {
-        type: "link",
-        value: `/pokedex/${pokemonIndexes.prevPokemon}`,
-        description: `Go to ${pokemonIndexes.prevPokemon}`,
-      },
+  const imageCount = images.length;
+  const nextIndex = imageIndex + 1 < imageCount ? imageIndex + 1 : 0;
+  const previousIndex = imageIndex - 1 >= 0 ? imageIndex - 1 : imageCount - 1;
+
+  let config: DPadConfig = {
+    up: {
+      type: "link",
+      value: `/pokedex/${pokemonIndexes.next}/overview`,
+      description: `Go to ${pokemonIndexes.prev}`,
+    },
+    down: {
+      type: "link",
+      value: `/pokedex/${pokemonIndexes.next}/overview`,
+      description: `Go to ${pokemonIndexes.prev}`,
+    },
+  };
+
+  if (!!imageCount) {
+    config = {
       left: {
         type: "param",
         value: previousIndex,
@@ -54,13 +66,11 @@ const genDpadLinks = (
         description: `Show image ${images[nextIndex].description}`,
         paramValue: "imageIndex",
       },
-      down: {
-        type: "link",
-        value: `/pokedex/${pokemonIndexes.nextPokemon}`,
-        description: `Go to ${pokemonIndexes.nextPokemon}`,
-      },
+      ...config,
     };
   }
+
+  return config;
 };
 
 export default function Dpad({ images = [], pokemon = [] }: DPadProps) {
@@ -93,7 +103,9 @@ export default function Dpad({ images = [], pokemon = [] }: DPadProps) {
       const params = new URLSearchParams(searchParams);
       return (
         <button
-          role="link"
+          role="tab"
+          id="nextImageButton"
+          aria-controls="slideshow"
           aria-label={description}
           className={className}
           onClick={() => {

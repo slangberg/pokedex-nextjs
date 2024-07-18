@@ -38,4 +38,5 @@
   height: calc(100% - 8px);
   width: calc(100% - 8px);
   padding: 60px 25px 25px 25px;
+  border-bottom-right-radius: 20px;
 }

@@ -21,6 +21,7 @@ export default async function LeftSide({ children, mini, dpad }: LefSideProps) {
             <Light size={15} color="#ffc334" />
           </div>
         </div>
+        <div className={metalTexture(styles.dexInfoRight)} />
       </div>
       <div className={styles.body}>
         <Display>{children}</Display>

@@ -1,4 +1,5 @@
 import DisplayItem from "@/components/Global/display.item";
+import ScreenHeading from "@/components/RightSide/screen.heading";
 import { ExtendedPageProps } from "@/types/page";
 import { getAllData } from "@/utils/api";
 import { convertToItemProps } from "@/utils/data";
@@ -17,9 +18,10 @@ export async function generateMetadata({
 
 export default async function EvolutionsScreen({ params }: ExtendedPageProps) {
   const slug = params.slug;
-  const { evolution_chain } = await getAllData(slug);
+  const { evolution_chain, display_name } = await getAllData(slug);
   return (
     <>
+      <ScreenHeading>{display_name} - Evolutions</ScreenHeading>
       {evolution_chain.map(({ display_name, name, details }) => {
         const formatted = details.map(convertToItemProps).flat();
         return (

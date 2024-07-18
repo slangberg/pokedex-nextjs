@@ -14,6 +14,7 @@ export default function Display({ children }: DisplayProps) {
         className={styles.display}
         aria-labelledby="fig2-caption"
         role="complementary"
+        id="slideshow"
       >
         {children}
       </aside>

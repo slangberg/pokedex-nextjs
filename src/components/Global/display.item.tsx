@@ -2,6 +2,8 @@ import { DisplayValue } from "@/types/data";
 import styles from "./display.item.module.css";
 import { FaLink } from "react-icons/fa6";
 import Link from "next/link";
+import { nanum } from "@/fonts";
+import classNames from "classnames";
 interface LightProps {
   title: string;
   description?: string;
@@ -30,7 +32,10 @@ export default function DisplayItem({
   const Content = (
     <>
       <header>
-        <h2 id="pokdex-item-title" className={styles.title}>
+        <h2
+          id="pokdex-item-title"
+          className={classNames(styles.title, nanum.className)}
+        >
           {href && <FaLink className={styles.linkIcon} />} {title}
         </h2>
       </header>
@@ -40,7 +45,10 @@ export default function DisplayItem({
           <ul className={styles.properties}>
             {properties.map(({ name, value }) => (
               <li key={name}>
-                <span className={styles.name}>{name}:</span> {value}
+                <span className={classNames(styles.name, nanum.className)}>
+                  {name}:
+                </span>{" "}
+                {value}
               </li>
             ))}
           </ul>

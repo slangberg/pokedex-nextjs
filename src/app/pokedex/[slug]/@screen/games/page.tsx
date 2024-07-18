@@ -1,4 +1,5 @@
 import DisplayItem from "@/components/Global/display.item";
+import ScreenHeading from "@/components/RightSide/screen.heading";
 import { ExtendedPageProps } from "@/types/page";
 import { getAllData } from "@/utils/api";
 import { Metadata } from "next";
@@ -16,9 +17,10 @@ export async function generateMetadata({
 
 export default async function GamesScreen({ params }: ExtendedPageProps) {
   const slug = params.slug;
-  const { games } = await getAllData(slug);
+  const { games, display_name } = await getAllData(slug);
   return (
     <>
+      <ScreenHeading>{display_name} - Games</ScreenHeading>
       {games.map((name) => {
         return <DisplayItem key={name} title={name} />;
       })}

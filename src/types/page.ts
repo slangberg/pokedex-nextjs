@@ -34,3 +34,12 @@ export interface DPadConfig {
   up?: LinkConfigUnion;
   down?: LinkConfigUnion;
 }
+
+export interface ListData {
+  total: number;
+  current: number;
+  nextCount: number;
+  prevCount: number;
+  next: string | null;
+  prev: string | null;
+}

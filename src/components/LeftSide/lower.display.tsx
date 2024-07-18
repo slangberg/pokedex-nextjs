@@ -1,6 +1,4 @@
-import { CSSProperties } from "react";
 import styles from "./lower.display.module.css";
-import classnames from "classnames";
 interface LowerDisplayProps {
   children?: JSX.Element;
 }

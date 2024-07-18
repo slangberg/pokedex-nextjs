@@ -5,7 +5,7 @@ import styles from "./button.nav.module.css";
 import { ReactNode } from "react";
 import { usePathname, useSearchParams, useParams } from "next/navigation";
 import classnames from "classnames";
-import { isEmpty } from "@/utils/data";
+import { nanum } from "@/fonts";
 interface LightProps {
   path: string;
   children: JSX.Element | ReactNode;
@@ -14,7 +14,6 @@ interface LightProps {
 
 export default function MainNavLink({ path, children, disabled }: LightProps) {
   const searchParams = useSearchParams();
-  console.log(searchParams);
   const pathname = usePathname();
   const active = pathname.includes(path);
   const { slug } = useParams();
@@ -38,7 +37,7 @@ export default function MainNavLink({ path, children, disabled }: LightProps) {
   return (
     <Link
       href={genLink()}
-      className={classnames({
+      className={classnames(nanum.className, {
         [styles.active]: active,
         [styles.link]: true,
       })}

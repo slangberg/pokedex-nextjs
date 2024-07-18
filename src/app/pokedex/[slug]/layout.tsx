@@ -5,22 +5,12 @@ import ClientSlideshow from "@/components/LeftSide/image.slideshow.client";
 import ClientDpad from "@/components/LeftSide/dpad.client";
 import { Metadata } from "next";
 import { PokeResource } from "@/types/data";
+import LowerDisplayClient from "@/components/LeftSide/lower.display.client";
 
 type LayoutProps = ExtendedPageProps & {
   screen: JSX.Element;
   slideshow: JSX.Element;
 };
-
-export async function generateMetadata({
-  params,
-}: ExtendedPageProps): Promise<Metadata> {
-  const slug = params.slug;
-  const data = await getAllData(slug);
-  return {
-    title: `${data.display_name} - Overview`,
-    description: `Pokedex overview of ${data.display_name}`,
-  };
-}
 
 export default async function PokemonPageLayout({
   params,
@@ -37,7 +27,7 @@ export default async function PokemonPageLayout({
   return (
     <MainLayout
       left={<ClientSlideshow data={data.images} />}
-      mini={<>mini</>}
+      mini={<LowerDisplayClient images={data.images} pokemon={allPokemon} />}
       dpad={<ClientDpad images={data.images} pokemon={allPokemon} />}
     >
       {screen}
