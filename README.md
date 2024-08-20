@@ -19,5 +19,9 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/pokedex](http://localhost:3000/pokedex) with your browser to see the pokedex layout
+
+Use the dpad to navigate between pokemon, and the navigation buttons below to see the various data about the current pokemon
+
+This app will have an ai version coming soon but right now focuses on the basics of
 

@@ -1,5 +1,4 @@
 "use client";
-
 import styles from "./image.slideshow.module.css";
 import Image from "next/image";
 import { usePageIndex } from "@/utils/route";

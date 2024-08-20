@@ -1,3 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .test {
+    @apply text-red-500;
+  }
+}
+
 :root {
   --turquoise: #a9e9f7;
   --darkTurquoise: #1dc6ec;
