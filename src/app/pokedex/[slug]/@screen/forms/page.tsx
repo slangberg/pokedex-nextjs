@@ -1,5 +1,4 @@
-import DisplayItem from "@/components/Global/display.item";
-import ScreenHeading from "@/components/RightSide/screen.heading";
+import Screen from "@/components/RightSide/main.screen";
 import { ExtendedPageProps } from "@/types/page";
 import { getAllData } from "@/utils/api";
 import { convertToItemProps } from "@/utils/data";
@@ -19,15 +18,10 @@ export async function generateMetadata({
 export default async function FormsScreen({ params }: ExtendedPageProps) {
   const slug = params.slug;
   const { forms, display_name } = await getAllData(slug);
-  return (
-    <>
-      <ScreenHeading>{display_name} - Forms</ScreenHeading>
-      {forms.map(({ name, display_name, id, ...rest }) => {
-        const props = convertToItemProps(rest);
-        return (
-          <DisplayItem key={name} title={display_name} properties={props} />
-        );
-      })}
-    </>
-  );
+  const formatted = forms.map(({ name, display_name, id, ...rest }) => ({
+    title: display_name,
+    properties: convertToItemProps(rest),
+    key: name,
+  }));
+  return <Screen title={`${display_name} - Forms`} displayItems={formatted} />;
 }

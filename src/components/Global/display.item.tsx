@@ -1,10 +1,8 @@
 import { DisplayValue } from "@/types/data";
-import styles from "./display.item.module.css";
 import { FaLink } from "react-icons/fa6";
 import Link from "next/link";
-import { nanum } from "@/fonts";
 import classNames from "classnames";
-interface LightProps {
+export interface DisplayItemProps {
   title: string;
   description?: string;
   href?: string;
@@ -13,13 +11,29 @@ interface LightProps {
     value: DisplayValue;
   }>;
 }
+const containerClasses = classNames("bordered-container");
+
+const titleClasses = classNames(
+  "capitalize",
+  "flex",
+  "items-center",
+  "text-lg",
+  "font-heading"
+);
+
+const listClasses = classNames(
+  "list-square",
+  "p-0 mx-0 mt-2",
+  "no-underline",
+  "list-inside"
+);
 
 export default function DisplayItem({
   title,
   description,
   properties,
   href,
-}: LightProps) {
+}: DisplayItemProps) {
   const describedBy =
     description && properties
       ? "pokdex-item-description pokdex-item-properties"
@@ -32,23 +46,20 @@ export default function DisplayItem({
   const Content = (
     <>
       <header>
-        <h2
-          id="pokdex-item-title"
-          className={classNames(styles.title, nanum.className)}
-        >
-          {href && <FaLink className={styles.linkIcon} />} {title}
+        <h2 id="pokdex-item-title" className={titleClasses}>
+          {href && <FaLink className="mr-3" />} {title}
         </h2>
       </header>
       <section id="pokdex-item-description">{description}</section>
       {properties && !!properties.length && (
         <section id="pokdex-item-properties">
-          <ul className={styles.properties}>
+          <ul className={listClasses}>
             {properties.map(({ name, value }) => (
-              <li key={name}>
-                <span className={classNames(styles.name, nanum.className)}>
+              <li key={name} className="leading-5">
+                <span className="capitalize font-bold font-heading text-base mr-1">
                   {name}:
-                </span>{" "}
-                {value}
+                </span>
+                <span className="text-sm">{value}</span>
               </li>
             ))}
           </ul>
@@ -62,7 +73,7 @@ export default function DisplayItem({
       <article
         aria-labelledby="pokdex-item-title"
         aria-describedby={describedBy}
-        className={styles.container}
+        className={containerClasses}
       >
         {Content}
       </article>
@@ -74,9 +85,9 @@ export default function DisplayItem({
       href={href}
       aria-labelledby="pokdex-item-title"
       aria-describedby={describedBy}
-      className={styles.link}
+      className="no-underline hover:opacity-80"
     >
-      <article className={styles.container}>{Content}</article>
+      <article className="bordered-container">{Content}</article>
     </Link>
   );
 }

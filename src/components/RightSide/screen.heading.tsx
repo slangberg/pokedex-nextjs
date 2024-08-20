@@ -7,7 +7,5 @@ interface ScreenHeadingProps {
 }
 
 export default function ScreenHeading({ children }: ScreenHeadingProps) {
-  return (
-    <h1 className={classNames(styles.heading, nanum.className)}>{children}</h1>
-  );
+  return <h1 className="font-heading bg-black p-2 text-white">{children}</h1>;
 }

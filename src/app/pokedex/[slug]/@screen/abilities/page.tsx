@@ -1,5 +1,4 @@
-import DisplayItem from "@/components/Global/display.item";
-import ScreenHeading from "@/components/RightSide/screen.heading";
+import Screen from "@/components/RightSide/main.screen";
 import { ExtendedPageProps } from "@/types/page";
 import { getAllData } from "@/utils/api";
 import { Metadata } from "next";
@@ -18,12 +17,12 @@ export async function generateMetadata({
 export default async function AbilitiesScreen({ params }: ExtendedPageProps) {
   const slug = params.slug;
   const { abilities, display_name } = await getAllData(slug);
+  const formatted = abilities.map(({ name, summary }) => ({
+    title: name,
+    description: summary,
+    key: name,
+  }));
   return (
-    <>
-      <ScreenHeading>{display_name} - Abilities</ScreenHeading>
-      {abilities.map(({ name, summary }) => (
-        <DisplayItem key={name} title={name} description={summary} />
-      ))}
-    </>
+    <Screen title={`${display_name} - Abilities`} displayItems={formatted} />
   );
 }

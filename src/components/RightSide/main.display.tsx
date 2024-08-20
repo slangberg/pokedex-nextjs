@@ -1,13 +1,13 @@
-import { CSSProperties } from "react";
-import styles from "./main.display.module.css";
-import classnames from "classnames";
 interface ButtonNavProps {
   children?: JSX.Element;
 }
 
 export default function MainDisplay({ children }: ButtonNavProps) {
   return (
-    <main className={styles.container} role="main">
+    <main
+      className="bg-screen bg-no-repeat bg-cover h-[340px] overflow-hidden flex flex-col mb-3"
+      role="main"
+    >
       {children}
     </main>
   );
