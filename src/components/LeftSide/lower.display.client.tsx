@@ -11,6 +11,15 @@ interface LowerDisplayProps {
   pokemon: PokeResource[];
 }
 
+function Item({ heading, text }: { heading: string; text: string }) {
+  return (
+    <div className="flex items-center">
+      <span className="font-heading text-sm mr-1">{heading}:</span>
+      <span className="text-xs">{text}</span>
+    </div>
+  );
+}
+
 export default function LowerDisplayClient({
   images = [],
   pokemon = [],
@@ -19,38 +28,34 @@ export default function LowerDisplayClient({
   const pokemonData = usePokemonIndexes(pokemon);
   return (
     <>
-      <ul className={styles.list}>
-        <li>
-          <span className={nanum.className}>Up:</span> Show #
-          {pokemonData.prevCount} {addSpaces(pokemonData.prev || "")}
-        </li>
-        <li>
-          <span className={nanum.className}>Down:</span> Show #
-          {pokemonData.nextCount} {addSpaces(pokemonData.next || "")}
-        </li>
+      <div className="flex flex-col">
+        <Item
+          heading="Up"
+          text={`${pokemonData.prevCount} ${addSpaces(pokemonData.prev || "")}`}
+        />
+        <Item
+          heading="Down"
+          text={`${pokemonData.nextCount} ${addSpaces(pokemonData.next || "")}`}
+        />
         {!!imageData.total && (
           <>
-            <li>
-              <span className={nanum.className}>Left:</span> Show Image{" "}
-              {`(${imageData.nextCount}/${imageData.total})`}
-            </li>
-            <li>
-              <span className={nanum.className}>Right:</span> Show Image{" "}
-              {`(${imageData.prevCount}/${imageData.total})`}
-            </li>
+            <Item
+              heading="Left"
+              text={`Show Image (${imageData.nextCount}/${imageData.total})`}
+            />
+            <Item
+              heading="Right"
+              text={`Show Image (${imageData.prevCount}/${imageData.total})`}
+            />
           </>
         )}
         {!imageData.total && (
           <>
-            <li>
-              <span className={nanum.className}>Left:</span> None
-            </li>
-            <li>
-              <span className={nanum.className}>Right:</span> None
-            </li>
+            <Item heading="Left" text="None" />
+            <Item heading="Right" text="None" />
           </>
         )}
-      </ul>
+      </div>
     </>
   );
 }

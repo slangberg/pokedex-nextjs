@@ -1,11 +1,14 @@
 "use client";
-import styles from "./image.slideshow.module.css";
 import Image from "next/image";
 import { usePageIndex } from "@/utils/route";
+import classNames from "classnames";
+
 interface ImageSlideShowProps {
   data?: any[];
   activeIndex?: string;
 }
+
+const containerClasses = classNames("flex flex-col h-full");
 
 export default function SlideShow({ data = [] }: ImageSlideShowProps) {
   const activeIndex = usePageIndex();
@@ -21,10 +24,10 @@ export default function SlideShow({ data = [] }: ImageSlideShowProps) {
       aria-roledescription="carousel"
       aria-label="Image Slideshow"
       aria-live="polite"
-      className={styles.container}
+      className="relative h-[100%] w-[100%]"
     >
-      <figure className={styles.container}>
-        <div className={styles.image}>
+      <figure className={containerClasses}>
+        <div className="relative flex-1">
           <Image
             src={url}
             alt={description}
@@ -32,10 +35,12 @@ export default function SlideShow({ data = [] }: ImageSlideShowProps) {
             priority
             id="slide-image"
             sizes="300px, 300px"
-            style={{ objectFit: "contain" }}
+            className="object-contain flex-1"
           />
         </div>
-        <figcaption className={styles.title}>{description}</figcaption>
+        <figcaption className="p-2 capitalize text-sm truncate">
+          {description}
+        </figcaption>
       </figure>
     </div>
   );

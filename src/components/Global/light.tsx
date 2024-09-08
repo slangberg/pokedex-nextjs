@@ -1,16 +1,17 @@
 import { CSSProperties } from "react";
 import styles from "./light.module.css";
 import classnames from "classnames";
+import classNames from "classnames";
 interface LightProps {
-  size: number;
+  size?: number;
   color: string;
-  classes?: string[];
+  className?: string;
 }
 
-export default function Light({ size, color, classes = [] }: LightProps) {
+export default function Light({ size, color, className }: LightProps) {
   const style = {
     "--lightSize": `${size}px`,
     "--lightColor": color,
   } as CSSProperties;
-  return <div className={classnames(styles.base, ...classes)} style={style} />;
+  return <div className={classnames(styles.base, className)} style={style} />;
 }

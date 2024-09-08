@@ -3,12 +3,6 @@
   width: 500px;
   height: 700px;
   position: relative;
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 25px;
-  border-bottom-right-radius: 0;
-  /* margin: 0 auto; */
-  display: inline-block;
-  vertical-align: top;
 }
 
 .header {
@@ -35,38 +29,38 @@
 }
 
 .dexInfoLeft {
-  width: 38%;
+  /* width: 38%;
   height: 98px;
   border-bottom-right-radius: 76px;
-  border-top-left-radius: 25px;
-  box-shadow: -5px -5px 0px -1px var(--shadowBase) inset,
-    5px 5px 5px -3px rgba(255, 255, 255, 0.51) inset;
+  border-top-left-radius: 25px; */
+  /* box-shadow: -5px -5px 0px -1px var(--shadowBase) inset,
+    5px 5px 5px -3px rgba(255, 255, 255, 0.51) inset; */
   position: absolute;
   z-index: 1;
   background-color: var(--baseRed);
 }
 
 .body {
-  height: calc(100% - 20px);
+  /* height: calc(100% - 20px); */
   box-shadow: inset 0px 0px 10px 3px var(--shadowBase);
-  margin: 0 0 10px 10px;
-  border-bottom-left-radius: 20px;
+  margin: 10px 0 5px 5px;
+  /* border-bottom-left-radius: 20px;
   border-bottom-right-radius: 5px;
-  padding: 110px 24px 0 24px;
+  border-top-right-radius: 20px; */
+  /* padding: 110px 24px 0 24px; */
   margin-top: 10px;
-  border-top-right-radius: 20px;
 }
 
 .dexInfoRight {
   width: calc(65% - 2px);
   height: 57px;
   right: 0;
-  /* border-top-right-radius: 25px; */
+  /* border-top-right-radius: 25px; 
   background-color: var(--baseRed);
   box-shadow: 0px -5px 0px -1px var(--shadowBase) inset,
     0px 5px 5px -3px rgba(255, 255, 255, 0.51) inset;
   position: absolute;
-  z-index: 2;
+  z-index: 2; */
 }
 
 .indicators {
@@ -91,14 +85,9 @@
 }
 
 .circleButton {
-  width: 40px;
-  height: 40px;
-  background: #000;
-  border-radius: 40px;
   box-shadow: 0px 0px 4px 3px rgba(123, 124, 123, 0.3) inset,
     0px 2px 3px 1px rgb(0, 0, 0, 0.5);
   border: 1px solid rgba(111, 4, 20, 0.4);
-  margin-left: 15px;
 }
 
 .indicator {
@@ -107,7 +96,7 @@
   border-radius: 15px;
   border: 1px solid rgba(0, 0, 0, 0.5);
   box-shadow: inset 0px 0px 2px 2px rgba(111, 4, 20, 0.4);
-  margin-left: 15px;
+  /* margin-left: 15px; */
 }
 
 .extrasRow {
