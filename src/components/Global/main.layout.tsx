@@ -1,6 +1,5 @@
 import LeftSide from "@/components/LeftSide/leftside";
 import RightSide from "@/components/RightSide/right.side";
-import styles from "./main.layout.module.css";
 import classNames from "classnames";
 
 interface AsideProps {
@@ -20,9 +19,11 @@ const wrapperStyles = classNames(
 );
 
 const containerStyles = classNames(
-  "flex",
-  "flex-col md:flex-row",
-  styles.container
+  "max-w-[100vw] md:min-w-[345px]",
+  "width-full",
+  "max-h-[100vh]",
+  "flex h-max",
+  "flex-col md:flex-row"
 );
 
 export default function MainLayout({ mini, left, children, dpad }: AsideProps) {

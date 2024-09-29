@@ -1,9 +1,7 @@
 import MainLayout from "@/components/Global/main.layout";
-import { BaseParams, ExtendedPageProps } from "@/types/page";
-import { apiSearch, getAllData } from "@/utils/api";
-import ClientSlideshow from "@/components/LeftSide/image.slideshow.client";
+import { ExtendedPageProps } from "@/types/page";
+import { apiSearch } from "@/utils/api";
 import ClientDpad from "@/components/LeftSide/dpad.client";
-import { Metadata } from "next";
 import { PokeResource } from "@/types/data";
 import LowerDisplayClient from "@/components/LeftSide/lower.display.client";
 
@@ -12,10 +10,7 @@ type LayoutProps = ExtendedPageProps & {
   slideshow: JSX.Element;
 };
 
-export default async function PokemonPageLayout({
-  params,
-  screen,
-}: LayoutProps) {
+export default async function PokemonPageLayout({ screen }: LayoutProps) {
   const allPokemon = await apiSearch<PokeResource[]>({
     url: "https://pokeapi.co/api/v2/pokemon",
     key: "results",

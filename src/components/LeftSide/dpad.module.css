@@ -2,7 +2,6 @@
   position: relative;
   height: calc(var(--buttonSize) * 3);
   width: calc(var(--buttonSize) * 3);
-  top: -30px;
 }
 
 .wrapper {

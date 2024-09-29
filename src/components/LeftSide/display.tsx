@@ -22,7 +22,8 @@ const wrapperStyles = classNames(
   "relative",
   "bg-[#e3dedd]",
   "rounded-t-md",
-  "mb-14",
+  "mb-12",
+  "md:mb-14",
   "py-1 px-3",
   "md:pt-2 md:px-3 md:pb-2",
   "drop-shadow-deep"
@@ -40,7 +41,8 @@ const bottomStyles = classNames(
   "flex justify-between absolute",
   "box-border",
   "top-[100%] w-[calc(100%_-_25px)]",
-  "z-[2] pr-[0] mt-1"
+  "z-[2] pr-[0] mt-1",
+  "pl-5"
 );
 
 const displayStyles = classNames(
@@ -56,7 +58,7 @@ const speakerContainerStyles = classNames("flex flex-row md:flex-col", "gap-1");
 export default function Display({ children }: DisplayProps) {
   return (
     <div className={wrapperStyles}>
-      <div className="text-center pb-1">
+      <div className="flex justify-center pb-1 flex-row gap-2">
         <Light className="md:w-4 md:h-4 w-3 h-3" color="#e93a3a" />
         <Light className="md:w-4 md:h-4 w-3 h-3" color="#0ec518" />
       </div>
@@ -69,7 +71,7 @@ export default function Display({ children }: DisplayProps) {
         {children}
       </aside>
       <div className={bottomStyles}>
-        <Light className="md:w-4 md:h-4 w-3 h-3" color="#e93a3a" />
+        <Light className="md:w-5 md:h-5 w-3 h-3" color="#e93a3a" />
         <div className={speakerContainerStyles}>
           <div className={speakerStyles} />
           <div className={speakerStyles} />

@@ -31,11 +31,11 @@ export default function LowerDisplayClient({
       <div className="flex flex-col">
         <Item
           heading="Up"
-          text={`${pokemonData.prevCount} ${addSpaces(pokemonData.prev || "")}`}
+          text={`${pokemonData.nextCount} ${addSpaces(pokemonData.next || "")}`}
         />
         <Item
           heading="Down"
-          text={`${pokemonData.nextCount} ${addSpaces(pokemonData.next || "")}`}
+          text={`${pokemonData.prevCount} ${addSpaces(pokemonData.prev || "")}`}
         />
         {!!imageData.total && (
           <>

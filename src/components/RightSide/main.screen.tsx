@@ -3,8 +3,9 @@ import DisplayItem, {
 } from "@/components/Global/display.item";
 import classNames from "classnames";
 import type { ReactNode } from "react";
+import ScreenHeading from "./screen.heading";
 
-interface ExtendedItem extends DisplayItemProps {
+export interface ExtendedItem extends DisplayItemProps {
   key: string;
 }
 
@@ -29,11 +30,11 @@ export default async function Screen({
 }: ScreenProps) {
   return (
     <>
-      <h1 className="font-heading bg-black p-2 text-white">{title}</h1>
+      <ScreenHeading>{title}</ScreenHeading>
       <div className={container}>
         {children}
         {displayItems.map((props) => (
-          <DisplayItem {...props} />
+          <DisplayItem {...props} key={props.key} />
         ))}
       </div>
     </>

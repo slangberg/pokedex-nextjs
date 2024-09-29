@@ -9,8 +9,16 @@ import {
   UrlObject,
   RawEvolutionDetail,
   ChainLink,
+  PokemonOverview,
 } from "@/types/data";
-import { addSpaces, moveObjectsToFirstPosition, pick } from "./data";
+import {
+  addSpaces,
+  convertBooleanToYesNo,
+  moveObjectsToFirstPosition,
+  pick,
+} from "./data";
+import { DisplayItemProps } from "@/components/Global/display.item";
+import { ExtendedItem } from "@/components/RightSide/main.screen";
 
 export interface APIConfig {
   url: string;
@@ -163,6 +171,9 @@ const normalizeForms = async (forms: Array<PokeResource>): Promise<Form[]> => {
       const form: Partial<Form> = { ...clone };
       form.display_name = addSpaces(data.name);
       form.version = data.version_group.name;
+      form.types = data.types.map(
+        ({ type }: { type: PokeResource }) => type.name
+      );
       return form as Form;
     })
   );
@@ -181,9 +192,12 @@ const normalizeEvolutionChain = async (
     source: Partial<RawEvolutionDetail>
   ): Partial<EvolutionDetail> {
     if (!source || typeof source !== "object") {
+      console.error("Invalid source", source);
       return source as Partial<EvolutionDetail>;
     }
+
     const clone: Partial<EvolutionDetail> = {};
+
     for (const [key, value] of Object.entries(source)) {
       if (value && typeof value === "object" && "name" in value) {
         // @ts-ignore
@@ -192,12 +206,12 @@ const normalizeEvolutionChain = async (
         clone[key as keyof EvolutionDetail] = value as any;
       }
     }
+
     return clone as Partial<EvolutionDetail>;
   }
 
   function traverse(node: ChainLink) {
     if (!node) return;
-
     const nodeData: Evolution = {
       is_baby: node.is_baby,
       name: node.species.name,
@@ -207,6 +221,7 @@ const normalizeEvolutionChain = async (
         trigger: trigger.name,
       })) as EvolutionDetail[],
     };
+
     result.push(nodeData);
 
     if (node.evolves_to.length > 0) {
@@ -270,6 +285,107 @@ const normalizeSpecies = async (resource: PokeResource): Promise<Species> => {
   return species as Species;
 };
 
+export function createPokemonOverview(pokemon: PokemonData): PokemonOverview {
+  const firstAbility = pokemon.abilities[0]; // Take the first ability for simplicity
+  const currentIndex = pokemon.evolution_chain.findIndex(
+    ({ name }) => name === pokemon.name
+  ); // Simplifying to the first evolution in the chain
+  const next = pokemon.evolution_chain[currentIndex + 1];
+
+  const weightInGrams = pokemon.weight * 100;
+  const weightFormatted =
+    weightInGrams >= 1000
+      ? `${(weightInGrams / 1000).toFixed(2)} Kilograms`
+      : `${weightInGrams} Grams`;
+
+  return {
+    id: pokemon.id,
+    name: pokemon.display_name,
+    type: pokemon.types.join(", "),
+    description:
+      pokemon.flavor_text || pokemon.description || "No description available",
+    height: `${pokemon.height / 10}  Meters`, // converting decimeters to meters
+    weight: weightFormatted, // Simplified weight calculation
+
+    abilities: pokemon.abilities.map(({ name, description }) => ({
+      name,
+      description,
+    })),
+    generation: pokemon.generation,
+    evolution: {
+      current_stage: pokemon.name,
+      evolves_to: next?.name || "No further evolution",
+      evolves_from: pokemon.evolves_from || "No previous evolution",
+      trigger: next?.details[0]?.trigger || "Unknown",
+    },
+
+    stats: {
+      is_mythical: convertBooleanToYesNo(pokemon.is_mythical),
+      is_legendary: convertBooleanToYesNo(pokemon.is_legendary),
+      capture_rate: `${((pokemon.capture_rate / 255) * 100).toFixed(2)}%`,
+      gender_rate:
+        pokemon.gender_rate === -1
+          ? "Genderless"
+          : `${(pokemon.gender_rate / 8) * 100}% female`,
+    },
+  };
+}
+
+export const convertOverviewToDisplayItems = (
+  overview: PokemonOverview
+): Array<ExtendedItem> => {
+  const first: ExtendedItem = {
+    title: "General",
+    key: "general",
+    properties: [
+      { name: "Name", value: overview.name },
+      { name: "Type", value: overview.type },
+      { name: "Description", value: overview.description },
+    ],
+  };
+
+  const second: ExtendedItem = {
+    title: "Physical",
+    key: "physical",
+    properties: [
+      { name: "Height", value: overview.height },
+      { name: "Weight", value: overview.weight },
+    ],
+  };
+
+  const third: ExtendedItem = {
+    title: "Abilities",
+    key: "abilities",
+    properties: overview.abilities.map(({ name, description }) => ({
+      name,
+      value: description,
+    })),
+  };
+
+  const fourth: ExtendedItem = {
+    title: "Evolution",
+    key: "evolution",
+    properties: [
+      { name: "Current Stage", value: overview.evolution.current_stage },
+      { name: "Evolves To", value: overview.evolution.evolves_to },
+      { name: "Evolves From", value: overview.evolution.evolves_from },
+      { name: "Trigger", value: overview.evolution.trigger },
+    ],
+  };
+
+  const fifth: ExtendedItem = {
+    title: "Stats",
+    key: "stats",
+    properties: [
+      { name: "Is Mythical", value: overview.stats.is_mythical },
+      { name: "Is Legendary", value: overview.stats.is_legendary },
+      { name: "Capture Rate", value: overview.stats.capture_rate },
+    ],
+  };
+
+  return [first, second, third, fourth, fifth];
+};
+
 export const genPokemonData = async (slug: string): Promise<PokemonData> => {
   const source = await apiSearch<any>({
     url: `https://pokeapi.co/api/v2/pokemon/${slug}`,
@@ -284,6 +400,7 @@ export const genPokemonData = async (slug: string): Promise<PokemonData> => {
   base.display_name = addSpaces(source.name);
   base.abilities = await normalizeAbilities(source.abilities);
   base.forms = await normalizeForms(source.forms);
+  base.types = base.forms.map(({ types }) => types).flat();
   base.games = source.game_indices.map(
     ({ version }: { version: { name: string } }) => version.name
   );
@@ -295,6 +412,7 @@ export const genPokemonData = async (slug: string): Promise<PokemonData> => {
   );
   const species = await normalizeSpecies(source.species);
   base = { ...base, ...species };
+  base.overview = createPokemonOverview(base as PokemonData);
   return base as PokemonData;
 };
 

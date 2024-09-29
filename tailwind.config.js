@@ -14,6 +14,8 @@ module.exports = {
     backgroundImage: {
       screen: "url('/screen-background.png')",
       metal: "url('/red-metal.jpg')",
+      "radial-gradient":
+        "radial-gradient(ellipse at center, var(--tw-gradient-stops))",
     },
     listStyleType: {
       square: "square",
@@ -26,10 +28,11 @@ module.exports = {
         "-5px -5px 0px -1px var(--shadowBase) inset, 5px 5px 5px -3px rgba(255, 255, 255, 0.51) inset",
       "ridge-1":
         "-5px -5px 0px -1px var(--shadowBase) inset, 0px 5px 5px -3px rgba(255, 255, 255, 0.51) inset",
+      "ridge-2": "3px -5px 0px -1px var(--shadowBase) inset",
     },
     dropShadow: {
       deep: "0px 0px 10px rgba(50, 50, 50, 0.8)",
-      "deep-down": "5px 7px 9px var(--shadowBase)",
+      "deep-down": "0px 7px 9px var(--shadowBase)",
     },
     zIndex: {
       1: "1",

@@ -17,11 +17,11 @@ export async function generateMetadata({
 export default async function OverView({ params }: ExtendedPageProps) {
   const slug = params.slug;
   const { overview, display_name } = await getAllData(slug);
-  // console.log({ overview });
+
   return (
     <Screen
       title={`${display_name} - Overview`}
       displayItems={convertOverviewToDisplayItems(overview)}
-    ></Screen>
+    />
   );
 }

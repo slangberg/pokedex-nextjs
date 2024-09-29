@@ -1,6 +1,5 @@
 import { CSSProperties } from "react";
 import styles from "./light.module.css";
-import classnames from "classnames";
 import classNames from "classnames";
 interface LightProps {
   size?: number;
@@ -8,10 +7,17 @@ interface LightProps {
   className?: string;
 }
 
+const lightStyles = classNames("rounded-full");
+
 export default function Light({ size, color, className }: LightProps) {
   const style = {
     "--lightSize": `${size}px`,
     "--lightColor": color,
   } as CSSProperties;
-  return <div className={classnames(styles.base, className)} style={style} />;
+  return (
+    <div
+      className={classNames(styles.base, lightStyles, className)}
+      style={style}
+    />
+  );
 }

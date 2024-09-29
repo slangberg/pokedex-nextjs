@@ -15,15 +15,15 @@
 }
 
 .lens {
-  position: absolute;
+  /* position: absolute; */
   background: radial-gradient(var(--turquoise), var(--darkTurquoise));
-  border-radius: 50px;
+  /* border-radius: 50px; */
   border-style: solid;
   border-color: #fff;
   border-width: 5px;
   box-shadow: 0px 0px 6px 4px var(--darkRed);
-  width: 50px;
-  height: 50px;
+  /* width: 50px;
+  height: 50px; */
   left: 25px;
   top: 15px;
 }
@@ -43,7 +43,7 @@
 .body {
   /* height: calc(100% - 20px); */
   box-shadow: inset 0px 0px 10px 3px var(--shadowBase);
-  margin: 10px 0 5px 5px;
+  /* margin: 10px 0 5px 5px; */
   /* border-bottom-left-radius: 20px;
   border-bottom-right-radius: 5px;
   border-top-right-radius: 20px; */
@@ -79,9 +79,9 @@
 }
 
 .leftSideControls {
-  display: flex;
+  /* display: flex;
   align-content: center;
-  margin-top: 10px;
+  margin-top: 10px; */
 }
 
 .circleButton {

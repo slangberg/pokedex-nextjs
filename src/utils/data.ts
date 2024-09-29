@@ -72,12 +72,10 @@ export const moveObjectsToFirstPosition = <T extends Record<string, any>>(
 export const addSpaces = (string: string): string =>
   capitalizeFirstLetter(string.replace(/_/g, " ").replace(/-/g, " ").trim());
 
-export const convertToItemProps = <
-  T extends Record<string, string | number | boolean | null>
->(
+export const convertToItemProps = <T>(
   source: T
 ): Array<{ name: string; value: DisplayValue }> =>
-  Object.entries(source)
+  Object.entries(source as Record<string, string | number | boolean | null>)
     .filter(([_key, value]) => value !== null)
     .map(([key, value]) => {
       const name = addSpaces(key);
@@ -91,6 +89,9 @@ export const convertToItemProps = <
         value: valueOutput,
       };
     });
+
+export const convertBooleanToYesNo = (value: boolean): string =>
+  value ? "Yes" : "No";
 
 export const capitalizeFirstLetter = (string: string): string => {
   if (string.length === 0) return string;

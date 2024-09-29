@@ -25,9 +25,11 @@ import { IconType } from "react-icons";
 import { UrlObject } from "@/types/data";
 import { usePageIndex, usePokemonIndexes } from "@/utils/route";
 import { PokeResource } from "../../types/data";
+import classNames from "classnames";
 interface DPadProps {
   images?: UrlObject[];
   pokemon?: PokeResource[];
+  className?: string;
 }
 
 const genDpadLinks = (
@@ -43,12 +45,12 @@ const genDpadLinks = (
     up: {
       type: "link",
       value: `/pokedex/${pokemonIndexes.next}/overview`,
-      description: `Go to ${pokemonIndexes.prev}`,
+      description: `Go to next pokemon ${pokemonIndexes.next}`,
     },
     down: {
       type: "link",
-      value: `/pokedex/${pokemonIndexes.next}/overview`,
-      description: `Go to ${pokemonIndexes.prev}`,
+      value: `/pokedex/${pokemonIndexes.prev}/overview`,
+      description: `Go to previous pokemon  ${pokemonIndexes.prev}`,
     },
   };
 
@@ -130,10 +132,17 @@ export default function Dpad({ images = [], pokemon = [] }: DPadProps) {
   };
 
   return (
-    <div className={styles.container} style={style}>
+    <div
+      className={classNames(
+        styles.container,
+        "top-[-0.22rem] md:top-[-2.1rem]"
+      )}
+      style={style}
+    >
       <div className={styles.wrapper}>
         <div className={styles.center}>
-          <div className={styles.centerCircle}></div>
+          {/* <div className={styles.centerCircle} /> */}
+          {pokemonIndexes.current}
         </div>
         {genButton(styles.up, FaAngleUp, localConfig.up)}
         {genButton(styles.right, FaAngleRight, localConfig.right)}

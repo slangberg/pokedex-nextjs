@@ -1,6 +1,0 @@
-.container {
-  width: fit-content;
-  max-width: 100vw; /* Ensure it fits within the viewport width */
-  max-height: 100vh; /* Ensure it fits within the viewport height */
-  overflow: auto; /* Add scrollbars if the content is too large */
-}

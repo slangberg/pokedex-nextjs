@@ -22,7 +22,7 @@ export interface Species {
   flavor_text: string;
   description?: string;
   evolves_from?: string;
-  evolution_chain: any[];
+  evolution_chain: Evolution[];
 }
 
 export interface Form {
@@ -34,6 +34,7 @@ export interface Form {
   is_mega: boolean;
   order: number;
   version: string;
+  types: string[];
 }
 
 export interface Ability {
@@ -55,6 +56,7 @@ export interface PokemonData extends Species {
   id: number;
   name: string;
   height: number;
+  weight: number;
   display_name: string;
   is_default: boolean;
   forms: Form[];
@@ -62,6 +64,8 @@ export interface PokemonData extends Species {
   abilities: Ability[];
   sounds: UrlObject[];
   images: UrlObject[];
+  types: string[];
+  overview: PokemonOverview;
 }
 
 export interface EvolutionDetail {
@@ -121,5 +125,28 @@ export type Evolution = Omit<
   display_name: string;
   details: EvolutionDetail[];
 };
+
+export interface PokemonOverview {
+  id: number;
+  name: string;
+  type: string;
+  description: string;
+  height: string;
+  weight: string;
+  abilities: Array<{ name: string; description: string }>;
+  generation: string;
+  evolution: {
+    current_stage: string;
+    evolves_to: string;
+    evolves_from: string;
+    trigger: string;
+  };
+  stats: {
+    is_mythical: string;
+    is_legendary: string;
+    capture_rate: string;
+    gender_rate: string;
+  };
+}
 
 export type DisplayValue = string | number | boolean | null;

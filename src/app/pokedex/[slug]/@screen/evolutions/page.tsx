@@ -1,4 +1,4 @@
-import Screen from "@/components/RightSide/main.screen";
+import Screen, { ExtendedItem } from "@/components/RightSide/main.screen";
 import { ExtendedPageProps } from "@/types/page";
 import { getAllData } from "@/utils/api";
 import { convertToItemProps } from "@/utils/data";
@@ -18,10 +18,9 @@ export async function generateMetadata({
 export default async function EvolutionsScreen({ params }: ExtendedPageProps) {
   const slug = params.slug;
   const { evolution_chain, display_name } = await getAllData(slug);
-  const formatted = evolution_chain.map(
-    ({ display_name, summary, name, details }) => ({
+  const formatted: Array<ExtendedItem> = evolution_chain.map(
+    ({ display_name, name, details }) => ({
       title: display_name,
-      description: summary,
       href: `/pokedex/${name}/`,
       properties: details.map(convertToItemProps).flat(),
       key: name,
