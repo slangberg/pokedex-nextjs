@@ -9,19 +9,24 @@ interface AsideProps {
   dpad: JSX.Element;
 }
 
+// min-h-screen (not h-screen) so that on a viewport shorter than the device
+// the page grows and scrolls instead of clipping the top of the Pokédex.
 const wrapperStyles = classNames(
   "w-screen",
-  "h-screen",
+  "min-h-screen",
   "flex",
   "justify-center",
   "items-center",
   "flex-row"
 );
 
+// Mobile: fill the viewport so the data screen can take the remaining height.
+// Desktop: shrink to the device's own height so the wrapper can center it.
 const containerStyles = classNames(
   "max-w-[100vw] md:min-w-[345px]",
   "width-full",
   "h-screen overflow-hidden",
+  "md:h-auto md:overflow-visible",
   "flex",
   "flex-col md:flex-row"
 );
