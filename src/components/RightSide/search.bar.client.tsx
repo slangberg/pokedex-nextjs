@@ -106,7 +106,7 @@ export default function SearchBar({ pokemon }: SearchBarProps) {
     if (!entry) return;
     setQuery("");
     setOpen(false);
-    router.push(`/pokedex/${entry.name}/overview`);
+    router.push(`/${entry.name}/overview`);
   };
 
   const onSubmit = (event: FormEvent) => {

@@ -36,7 +36,7 @@ All data comes live from [PokéAPI](https://pokeapi.co/). The app has no databas
 
 - **Responsive layout.** On desktop the two halves sit side by side at a fixed size. On small screens they stack, the tab keys get shorter, and the data screen fills the remaining height of the viewport. It never shrinks below 180px; on short phones the page scrolls instead.
 - **Accessible.** Focus outlines are clearly visible, animations are turned off when the OS asks for reduced motion, and the decorative lights and speaker grille are hidden from screen readers. Every D-pad button has a descriptive `aria-label`, and each data card gets its own unique `aria-labelledby`/`aria-describedby` IDs.
-- **Error handling.** An unknown name or number (e.g. `/pokedex/notapokemon`) returns a real **404** with a "Pokémon not found" page and a link back. If a PokéAPI request fails for any other reason, an error boundary shows the message and a **Try again** button. A failure inside a single tab only replaces the right-hand screen, so the device and D-pad stay usable.
+- **Error handling.** An unknown name or number (e.g. `/notapokemon`) returns a real **404** with a "Pokémon not found" page and a link back. If a PokéAPI request fails for any other reason, an error boundary shows the message and a **Try again** button. A failure inside a single tab only replaces the right-hand screen, so the device and D-pad stay usable.
 - **Shareable URLs.** The Pokémon, the tab, and the sprite index (`?imageIndex=`) all live in the URL, so any view can be bookmarked or linked.
 - **Per-page metadata.** Each tab sets its own `<title>` and description, e.g. *"Charizard - Evolutions"*.
 - **JSON endpoint.** `GET /api/{name-or-id}` returns the same normalised Pokémon object the UI uses, or a 404 with `{ "error": "..." }` for an unknown Pokémon.
@@ -67,7 +67,7 @@ npm install
 npm run dev
 ```
 
-Then open **http://localhost:3000** and pick a Pokémon with the D-pad. You can also go straight to one, for example http://localhost:3000/pokedex/pikachu/overview.
+Then open **http://localhost:3000** and pick a Pokémon with the D-pad. You can also go straight to one, for example http://localhost:3000/pikachu/overview.
 
 > The app fetches from `pokeapi.co` at request time, so you need an internet connection, even in development.
 
@@ -85,25 +85,26 @@ Then open **http://localhost:3000** and pick a Pokémon with the D-pad. You can 
 ## Routes
 
 ```
-/                              Empty device; use the D-pad to choose a Pokémon
-/pokedex                       Same empty device
-/pokedex/[slug]                Redirects to /pokedex/[slug]/overview
-/pokedex/[slug]/overview       ┐
-/pokedex/[slug]/forms          │
-/pokedex/[slug]/games          │
-/pokedex/[slug]/abilities      ├─ rendered in the right-hand screen via the @screen parallel route
-/pokedex/[slug]/moves          │
-/pokedex/[slug]/evolutions     ┘
-/api/[slug]                    JSON: normalised PokemonData
+/                      Empty device; use the D-pad or search to choose a Pokémon
+/[slug]                Redirects to /[slug]/overview
+/[slug]/overview       ┐
+/[slug]/forms          │
+/[slug]/games          │
+/[slug]/abilities      ├─ rendered in the right-hand screen via the @screen parallel route
+/[slug]/moves          │
+/[slug]/evolutions     ┘
+/api/[slug]            JSON: normalised PokemonData
 ```
 
 `[slug]` is anything PokéAPI accepts as a Pokémon identifier: a name (`bulbasaur`) or a national dex number (`1`).
+
+Older links under `/pokedex/...` still work. `next.config.mjs` permanently redirects (308) `/pokedex` to `/` and `/pokedex/<path>` to `/<path>`.
 
 ## How it works
 
 ### Layout and parallel routes
 
-`src/app/pokedex/[slug]/layout.tsx` is a server component. It fetches the selected Pokémon plus the full Pokémon list and renders `MainLayout`, which has two halves:
+`src/app/[slug]/layout.tsx` is a server component. It fetches the selected Pokémon plus the full Pokémon list and renders `MainLayout`, which has two halves:
 
 - **LeftSide:** the sprite slideshow, the D-pad, and the hint display. These are client components that read and write the URL with `useRouter`, `useParams` and `useSearchParams`.
 - **RightSide:** the data screen and the tab buttons. The screen's content is the `@screen` [parallel route](https://nextjs.org/docs/app/building-your-application/routing/parallel-routes) slot. Each tab is its own `@screen/<tab>/page.tsx`, and `@screen/default.tsx` redirects to `overview`.
@@ -127,9 +128,9 @@ When PokéAPI returns 404, `apiSearch` throws a `NotFoundError`. In pages and la
 
 | File | Scope |
 | --- | --- |
-| `src/app/pokedex/not-found.tsx` | "Pokémon not found" page for any unknown `/pokedex/[slug]/…` URL |
-| `src/app/pokedex/error.tsx` | Full-page fallback for any other failure under `/pokedex` |
-| `src/app/pokedex/[slug]/@screen/error.tsx` | Replaces only the right-hand screen when a single tab fails |
+| `src/app/not-found.tsx` | "Pokémon not found" page for an unknown `/[slug]/…` URL, or any other unknown path |
+| `src/app/error.tsx` | Full-page fallback for any other failure |
+| `src/app/[slug]/@screen/error.tsx` | Replaces only the right-hand screen when a single tab fails |
 
 Both error boundaries log the error to the console and call Next's `reset()` when you press **Try again**.
 
@@ -137,10 +138,10 @@ Both error boundaries log the error to the console and call Next's `reset()` whe
 
 | Control | State | Where |
 | --- | --- | --- |
-| D-pad up/down | Path segment `/pokedex/{name}/overview` | `usePokemonIndexes` in `src/utils/route.ts` |
+| D-pad up/down | Path segment `/{name}/overview` | `usePokemonIndexes` in `src/utils/route.ts` |
 | D-pad left/right | Search param `?imageIndex=n` | `usePageIndex` / `usePokemonImageData` in `src/utils/route.ts` |
 | Tab buttons | Last path segment (`overview`, `forms`…) | `ButtonNav` / `MainNavLink` in `src/components/RightSide/` |
-| Search | Local input state; navigates to `/pokedex/{name}/overview` | `SearchBar` in `src/components/RightSide/search.bar.client.tsx` |
+| Search | Local input state; navigates to `/{name}/overview` | `SearchBar` in `src/components/RightSide/search.bar.client.tsx` |
 
 ## Project structure
 
@@ -150,14 +151,12 @@ src/
 │   ├── layout.tsx               Root layout: fonts and global CSS
 │   ├── page.tsx                 Landing page: empty device shell
 │   ├── globals.css              Base styles, focus outlines, reduced-motion rules
-│   ├── pokedex/
-│   │   ├── page.tsx             Empty device shell
-│   │   ├── error.tsx            Full-page error boundary
-│   │   ├── not-found.tsx        404 page for unknown Pokémon
-│   │   └── [slug]/
-│   │       ├── layout.tsx       Fetches data, renders the device
-│   │       └── @screen/         Parallel-route tabs (overview, forms, games, abilities, moves, evolutions)
-│   │           └── error.tsx    Screen-only error boundary
+│   ├── error.tsx                Full-page error boundary
+│   ├── not-found.tsx            404 page for unknown Pokémon
+│   ├── [slug]/
+│   │   ├── layout.tsx           Fetches data, renders the device
+│   │   └── @screen/             Parallel-route tabs (overview, forms, games, abilities, moves, evolutions)
+│   │       └── error.tsx        Screen-only error boundary
 │   └── api/[slug]/route.ts      JSON endpoint
 ├── components/
 │   ├── Global/                  MainLayout, indicator lights, display items

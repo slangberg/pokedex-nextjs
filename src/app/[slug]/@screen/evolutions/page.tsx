@@ -21,7 +21,7 @@ export default async function EvolutionsScreen({ params }: ExtendedPageProps) {
   const formatted: Array<ExtendedItem> = evolution_chain.map(
     ({ display_name, name, details }) => ({
       title: display_name,
-      href: `/pokedex/${name}/`,
+      href: `/${name}/`,
       properties: details.map(convertToItemProps).flat(),
       key: name,
     })

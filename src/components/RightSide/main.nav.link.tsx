@@ -23,7 +23,7 @@ export default function MainNavLink({ path, children, disabled }: LightProps) {
 
   const genLink = () => {
     if (isDisabled) return "#";
-    let base = `/pokedex/${slug}/${path}`;
+    let base = `/${slug}/${path}`;
     if (Array.from(searchParams.entries()).length) {
       base += `?${params.toString()}`;
     }

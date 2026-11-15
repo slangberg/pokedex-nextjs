@@ -44,12 +44,12 @@ const genDpadLinks = (
   let config: DPadConfig = {
     up: {
       type: "link",
-      value: `/pokedex/${pokemonIndexes.next}/overview`,
+      value: `/${pokemonIndexes.next}/overview`,
       description: `Go to next pokemon ${pokemonIndexes.next}`,
     },
     down: {
       type: "link",
-      value: `/pokedex/${pokemonIndexes.prev}/overview`,
+      value: `/${pokemonIndexes.prev}/overview`,
       description: `Go to previous pokemon  ${pokemonIndexes.prev}`,
     },
   };

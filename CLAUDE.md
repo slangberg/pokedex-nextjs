@@ -21,16 +21,20 @@ This is a Next.js 14 App Router Pokédex that renders as a visual Pokédex devic
 ### Route structure
 
 ```
-/pokedex                        → list/search page
-/pokedex/[slug]                 → redirect (page.tsx returns null)
-/pokedex/[slug]/@screen/overview   → overview tab (parallel route)
-/pokedex/[slug]/@screen/abilities  → abilities tab
-/pokedex/[slug]/@screen/evolutions → evolutions tab
-/pokedex/[slug]/@screen/forms      → forms tab
-/pokedex/[slug]/@screen/games      → games tab
+/                               → empty device (D-pad + search)
+/[slug]                         → redirect to /[slug]/overview (@screen/default.tsx)
+/[slug]/@screen/overview        → overview tab (parallel route)
+/[slug]/@screen/abilities       → abilities tab
+/[slug]/@screen/evolutions      → evolutions tab
+/[slug]/@screen/forms           → forms tab
+/[slug]/@screen/games           → games tab
+/[slug]/@screen/moves           → moves tab
+/api/[slug]                     → JSON PokemonData (404 JSON if unknown)
 ```
 
-The `@screen` segment is a Next.js **parallel route** — the layout at `src/app/pokedex/[slug]/layout.tsx` receives it as the `screen` slot and passes it into the right-side display panel. Navigation between tabs (Overview, Forms, Games, etc.) is handled by `ButtonNav` changing the URL segment; the active tab is determined by which `@screen` child route matches.
+Old `/pokedex/...` URLs are 308-redirected to the root-level routes in `next.config.mjs`. Don't reintroduce a `/pokedex` prefix in links.
+
+The `@screen` segment is a Next.js **parallel route** — the layout at `src/app/[slug]/layout.tsx` receives it as the `screen` slot and passes it into the right-side display panel. Navigation between tabs (Overview, Forms, Games, etc.) is handled by `ButtonNav` changing the URL segment; the active tab is determined by which `@screen` child route matches.
 
 ### Component split: LeftSide / RightSide
 
@@ -55,7 +59,7 @@ The currently-displayed image is tracked via the `imageIndex` URL search param. 
 
 ### Navigation (D-pad up/down)
 
-`usePokemonIndexes` resolves the previous/next Pokémon names by looking up the current slug in the full list fetched from `/api/v2/pokemon?limit=1302`. D-pad up/down navigate to `/pokedex/{name}/overview`.
+`usePokemonIndexes` resolves the previous/next Pokémon names by looking up the current slug in the full list fetched from `/api/v2/pokemon?limit=1302`. D-pad up/down navigate to `/{name}/overview`.
 
 ### Styling
 
