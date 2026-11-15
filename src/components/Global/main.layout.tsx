@@ -21,8 +21,8 @@ const wrapperStyles = classNames(
 const containerStyles = classNames(
   "max-w-[100vw] md:min-w-[345px]",
   "width-full",
-  "max-h-[100vh]",
-  "flex h-max",
+  "h-screen overflow-hidden",
+  "flex",
   "flex-col md:flex-row"
 );
 

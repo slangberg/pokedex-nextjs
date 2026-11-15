@@ -16,6 +16,7 @@ export default function Light({ size, color, className }: LightProps) {
   } as CSSProperties;
   return (
     <div
+      aria-hidden="true"
       className={classNames(styles.base, lightStyles, className)}
       style={style}
     />

@@ -19,15 +19,11 @@ export default function MainNavLink({ path, children, disabled }: LightProps) {
   const { slug } = useParams();
   const params = new URLSearchParams(searchParams);
 
+  const isDisabled = disabled || !slug;
+
   const genLink = () => {
-    let base = `/pokedex`;
-    if (disabled) {
-      return path;
-    }
-    if (slug) {
-      base += `/${slug}`;
-    }
-    base += `/${path}`;
+    if (isDisabled) return "#";
+    let base = `/pokedex/${slug}/${path}`;
     if (Array.from(searchParams.entries()).length) {
       base += `?${params.toString()}`;
     }
@@ -38,10 +34,13 @@ export default function MainNavLink({ path, children, disabled }: LightProps) {
     <Link
       href={genLink()}
       className={classnames(nanum.className, {
-        [styles.active]: active,
+        [styles.active]: active && !isDisabled,
         [styles.link]: true,
+        [styles.disabled]: isDisabled,
       })}
-      aria-disabled={disabled}
+      aria-disabled={isDisabled}
+      tabIndex={isDisabled ? -1 : undefined}
+      aria-current={active && !isDisabled ? "page" : undefined}
     >
       {children}
     </Link>

@@ -62,17 +62,15 @@ export default function Display({ children }: DisplayProps) {
         <Light className="md:w-4 md:h-4 w-3 h-3" color="#e93a3a" />
         <Light className="md:w-4 md:h-4 w-3 h-3" color="#0ec518" />
       </div>
-      <aside
+      <div
         className={displayStyles}
-        aria-labelledby="fig2-caption"
-        role="complementary"
         id="slideshow"
       >
         {children}
-      </aside>
+      </div>
       <div className={bottomStyles}>
         <Light className="md:w-5 md:h-5 w-3 h-3" color="#e93a3a" />
-        <div className={speakerContainerStyles}>
+        <div className={speakerContainerStyles} aria-hidden="true">
           <div className={speakerStyles} />
           <div className={speakerStyles} />
           <div className={speakerStyles} />

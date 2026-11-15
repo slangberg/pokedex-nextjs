@@ -6,14 +6,15 @@ interface RightSide {
 }
 
 const rightSideContainerStyles = classNames(
-  "relative flex flex-col flex-1",
+  "relative flex flex-col",
+  "flex-1 min-h-0",
   "bg-metal",
   "p-1 pl-0",
   "rounded-b-3xl md:rounded-bl-none",
   "z-1",
   "md:top-[45px]",
   "max-w-[500px] md:w-[626px]",
-  "h-[630px]"
+  "md:h-[630px] md:flex-none"
 );
 
 const cutoutStyles = classNames(
@@ -39,7 +40,8 @@ const bodyStyles = classNames(
   "pt-2 md:pt-[60px]",
   "pb-4",
   "rounded-b-3xl md:rounded-bl-none",
-  "shadow-body-inset grow"
+  "shadow-body-inset grow",
+  "flex flex-col min-h-0"
 );
 
 export default function RightSide({ children }: RightSide) {

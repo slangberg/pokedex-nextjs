@@ -10,13 +10,13 @@ const containerStyles = classNames(
   "bg-screen bg-no-repeat bg-cover",
   "rounded-md",
   "shadow-inset-1",
-  "h-[340px]",
+  "flex-1 min-h-0 md:flex-none md:h-[340px]",
   "pb-1 mb-2"
 );
 
 export default function MainDisplay({ children }: ButtonNavProps) {
   return (
-    <main className={containerStyles} role="main">
+    <main className={containerStyles}>
       {children}
     </main>
   );

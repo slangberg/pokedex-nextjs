@@ -94,8 +94,8 @@ export default function Dpad({ images = [], pokemon = [] }: DPadProps) {
   ) => {
     if (!buttonConfig) {
       return (
-        <button className={className}>
-          <Icon className={styles.icon} />
+        <button className={className} aria-label="Unavailable" aria-disabled="true">
+          <Icon className={styles.icon} aria-hidden="true" />
         </button>
       );
     }
@@ -105,8 +105,6 @@ export default function Dpad({ images = [], pokemon = [] }: DPadProps) {
       const params = new URLSearchParams(searchParams);
       return (
         <button
-          role="tab"
-          id="nextImageButton"
           aria-controls="slideshow"
           aria-label={description}
           className={className}
@@ -115,7 +113,7 @@ export default function Dpad({ images = [], pokemon = [] }: DPadProps) {
             replace(`${pathname}?${params.toString()}`);
           }}
         >
-          <Icon className={styles.icon} />
+          <Icon className={styles.icon} aria-hidden="true" />
         </button>
       );
     }
@@ -126,7 +124,7 @@ export default function Dpad({ images = [], pokemon = [] }: DPadProps) {
         className={className}
         href={value.toString()}
       >
-        <Icon className={styles.icon} />
+        <Icon className={styles.icon} aria-hidden="true" />
       </Link>
     );
   };

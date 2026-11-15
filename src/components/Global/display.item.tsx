@@ -34,25 +34,30 @@ export default function DisplayItem({
   properties,
   href,
 }: DisplayItemProps) {
+  const itemId = `pokedex-item-${title.toLowerCase().replace(/\s+/g, "-")}`;
+  const titleId = `${itemId}-title`;
+  const descId = `${itemId}-description`;
+  const propsId = `${itemId}-properties`;
+
   const describedBy =
     description && properties
-      ? "pokdex-item-description pokdex-item-properties"
+      ? `${descId} ${propsId}`
       : description
-      ? "pokdex-item-description"
+      ? descId
       : properties
-      ? "pokdex-item-properties"
+      ? propsId
       : undefined;
 
   const Content = (
     <>
       <header>
-        <h2 id="pokdex-item-title" className={titleClasses}>
-          {href && <FaLink className="mr-3" />} {title}
+        <h2 id={titleId} className={titleClasses}>
+          {href && <FaLink className="mr-3" aria-hidden="true" />} {title}
         </h2>
       </header>
-      <section id="pokdex-item-description">{description}</section>
+      <section id={descId}>{description}</section>
       {properties && !!properties.length && (
-        <section id="pokdex-item-properties">
+        <section id={propsId}>
           <ul className={listClasses}>
             {properties.map(({ name, value }) => (
               <li key={name} className="leading-5">
@@ -71,7 +76,7 @@ export default function DisplayItem({
   if (!href) {
     return (
       <article
-        aria-labelledby="pokdex-item-title"
+        aria-labelledby={titleId}
         aria-describedby={describedBy}
         className={containerClasses}
       >
@@ -83,7 +88,7 @@ export default function DisplayItem({
   return (
     <Link
       href={href}
-      aria-labelledby="pokdex-item-title"
+      aria-labelledby={titleId}
       aria-describedby={describedBy}
       className="no-underline hover:opacity-80"
     >
