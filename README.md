@@ -29,8 +29,13 @@ All data comes live from [PokéAPI](https://pokeapi.co/). The app has no databas
   | **Games** | Every game version the Pokémon appears in |
   | **Abilities** | Each ability with its short effect text |
   | **Evolutions** | The whole evolution chain with trigger details (level, item, happiness, time of day…), each stage linking to its own entry |
-  | **Moves** | *Coming soon* (the nav button exists, but the page isn't built yet) |
+  | **Moves** | Every move the Pokémon can learn |
 
+  The tab buttons are greyed out and can't be selected until you pick a Pokémon. The active tab is highlighted and marked with `aria-current="page"`.
+
+- **Responsive layout.** On desktop the two halves sit side by side at a fixed size. On small screens they stack, and the data screen fills the remaining height of the viewport.
+- **Accessible.** Focus outlines are clearly visible, animations are turned off when the OS asks for reduced motion, and the decorative lights and speaker grille are hidden from screen readers. Every D-pad button has a descriptive `aria-label`, and each data card gets its own unique `aria-labelledby`/`aria-describedby` IDs.
+- **Error handling.** If a PokéAPI request fails or a Pokémon doesn't exist, an error boundary shows the message and a **Try again** button. A failure inside a single tab only replaces the right-hand screen, so the device and D-pad stay usable.
 - **Shareable URLs.** The Pokémon, the tab, and the sprite index (`?imageIndex=`) all live in the URL, so any view can be bookmarked or linked.
 - **Per-page metadata.** Each tab sets its own `<title>` and description, e.g. *"Charizard - Evolutions"*.
 - **JSON endpoint.** `GET /api/{name-or-id}` returns the same normalised Pokémon object the UI uses.
@@ -61,7 +66,7 @@ npm install
 npm run dev
 ```
 
-Then open **http://localhost:3000/pokedex** and pick a Pokémon with the D-pad. You can also go straight to one, for example http://localhost:3000/pokedex/pikachu/overview.
+Then open **http://localhost:3000** and pick a Pokémon with the D-pad. You can also go straight to one, for example http://localhost:3000/pokedex/pikachu/overview.
 
 > The app fetches from `pokeapi.co` at request time, so you need an internet connection, even in development.
 
@@ -79,12 +84,14 @@ Then open **http://localhost:3000/pokedex** and pick a Pokémon with the D-pad. 
 ## Routes
 
 ```
-/pokedex                       Empty device; use the D-pad to choose a Pokémon
+/                              Empty device; use the D-pad to choose a Pokémon
+/pokedex                       Same empty device
 /pokedex/[slug]                Redirects to /pokedex/[slug]/overview
 /pokedex/[slug]/overview       ┐
 /pokedex/[slug]/forms          │
-/pokedex/[slug]/games          ├─ rendered in the right-hand screen via the @screen parallel route
-/pokedex/[slug]/abilities      │
+/pokedex/[slug]/games          │
+/pokedex/[slug]/abilities      ├─ rendered in the right-hand screen via the @screen parallel route
+/pokedex/[slug]/moves          │
 /pokedex/[slug]/evolutions     ┘
 /api/[slug]                    JSON: normalised PokemonData
 ```
@@ -111,7 +118,16 @@ Then open **http://localhost:3000/pokedex** and pick a Pokémon with the D-pad. 
 5. `normalizeEvolutionChain`: walks the evolution tree depth-first and flattens it into a list of stages with their trigger details.
 6. `createPokemonOverview`: builds the human-readable summary shown on the Overview tab (metric units, capture-rate %, gender ratio).
 
-The layout and every tab page call `getAllData` independently. Next.js's `fetch` request memoisation removes the duplicate network calls within a single render.
+The layout and every tab page call `getAllData` independently. Next.js's `fetch` request memoisation removes the duplicate network calls within a single render. The **Moves** tab is the exception: it reads `moves` straight from the base `/pokemon/{slug}` response with `apiSearch`, so it skips the extra ability, form, species and evolution requests.
+
+### Error boundaries
+
+| File | Scope |
+| --- | --- |
+| `src/app/pokedex/error.tsx` | Full-page fallback for anything under `/pokedex`, e.g. an unknown Pokémon in the layout fetch |
+| `src/app/pokedex/[slug]/@screen/error.tsx` | Replaces only the right-hand screen when a single tab fails |
+
+Both log the error to the console and call Next's `reset()` when you press **Try again**.
 
 ### Navigation state
 
@@ -127,12 +143,15 @@ The layout and every tab page call `getAllData` independently. Next.js's `fetch`
 src/
 ├── app/
 │   ├── layout.tsx               Root layout: fonts and global CSS
+│   ├── page.tsx                 Landing page: empty device shell
+│   ├── globals.css              Base styles, focus outlines, reduced-motion rules
 │   ├── pokedex/
 │   │   ├── page.tsx             Empty device shell
-│   │   ├── error.tsx            Error boundary (e.g. unknown Pokémon)
+│   │   ├── error.tsx            Full-page error boundary
 │   │   └── [slug]/
 │   │       ├── layout.tsx       Fetches data, renders the device
-│   │       └── @screen/         Parallel-route tabs (overview, forms, games, abilities, evolutions)
+│   │       └── @screen/         Parallel-route tabs (overview, forms, games, abilities, moves, evolutions)
+│   │           └── error.tsx    Screen-only error boundary
 │   └── api/[slug]/route.ts      JSON endpoint
 ├── components/
 │   ├── Global/                  MainLayout, indicator lights, display items
@@ -150,8 +169,12 @@ public/                          Metal and screen textures, Pokéball, Pokémon 
 
 ## Roadmap
 
-- [ ] **Moves** tab (the nav button already exists)
-- [ ] Search on the empty `/pokedex` screen and the landing page at `/`
+- [x] **Moves** tab
+- [x] Landing page at `/`
+- [x] Accessibility pass (focus outlines, reduced motion, ARIA labels)
+- [x] Error boundaries with retry
+- [ ] Search by name on the empty device screen
+- [ ] Moves detail (type, power, accuracy, and how/when each move is learned)
 - [ ] Play Pokémon cries (`sounds` is already in `PokemonData`)
 - [ ] An AI Pokédex assistant. There's an experimental LangChain/OpenAI agent in `src/actions/test.ts`, but the UI doesn't use it yet. It would need `OPENAI_API_KEY` and `TAVILY_API_KEY`.
 - [ ] Tests
