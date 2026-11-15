@@ -17,8 +17,33 @@ import {
   moveObjectsToFirstPosition,
   pick,
 } from "./data";
+import { notFound } from "next/navigation";
 import { DisplayItemProps } from "@/components/Global/display.item";
 import { ExtendedItem } from "@/components/RightSide/main.screen";
+
+/** Thrown by `apiSearch` when PokéAPI responds with 404. */
+export class NotFoundError extends Error {
+  constructor(message = "Not found") {
+    super(message);
+    this.name = "NotFoundError";
+  }
+}
+
+/**
+ * Awaits a PokéAPI request and turns a `NotFoundError` into Next's
+ * `notFound()`, so pages render `not-found.tsx` with a 404 status.
+ * Use this in server components, not in route handlers.
+ */
+export const withNotFound = async <T>(request: Promise<T>): Promise<T> => {
+  try {
+    return await request;
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      notFound();
+    }
+    throw error;
+  }
+};
 
 export interface APIConfig {
   url: string;
@@ -43,7 +68,7 @@ export const apiSearch = async <T>({
 
   if (!response.ok) {
     if (response.status === 404) {
-      throw new Error("not found");
+      throw new NotFoundError(`${url} not found`);
     }
 
     throw new Error(error || "Failed to load data");
@@ -416,7 +441,4 @@ export const genPokemonData = async (slug: string): Promise<PokemonData> => {
   return base as PokemonData;
 };
 
-export const getAllData = async (slug: string) => {
-  const pokemon = await genPokemonData(slug);
-  return pokemon;
-};
+export const getAllData = (slug: string) => withNotFound(genPokemonData(slug));

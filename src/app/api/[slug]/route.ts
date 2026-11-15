@@ -1,4 +1,4 @@
-import { genPokemonData } from "@/utils/api";
+import { genPokemonData, NotFoundError } from "@/utils/api";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -6,8 +6,16 @@ export async function GET(
   { params }: { params: { slug: string } }
 ) {
   const { slug } = params;
-  const data = await genPokemonData(slug);
-  return new Response(JSON.stringify({ data: data }), {
-    headers: { "Content-Type": "application/json" },
-  });
+  try {
+    const data = await genPokemonData(slug);
+    return Response.json({ data });
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return Response.json(
+        { error: `No Pokémon found for "${slug}"` },
+        { status: 404 }
+      );
+    }
+    throw error;
+  }
 }

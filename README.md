@@ -35,10 +35,10 @@ All data comes live from [PokéAPI](https://pokeapi.co/). The app has no databas
 
 - **Responsive layout.** On desktop the two halves sit side by side at a fixed size. On small screens they stack, and the data screen fills the remaining height of the viewport.
 - **Accessible.** Focus outlines are clearly visible, animations are turned off when the OS asks for reduced motion, and the decorative lights and speaker grille are hidden from screen readers. Every D-pad button has a descriptive `aria-label`, and each data card gets its own unique `aria-labelledby`/`aria-describedby` IDs.
-- **Error handling.** If a PokéAPI request fails or a Pokémon doesn't exist, an error boundary shows the message and a **Try again** button. A failure inside a single tab only replaces the right-hand screen, so the device and D-pad stay usable.
+- **Error handling.** An unknown name or number (e.g. `/pokedex/notapokemon`) returns a real **404** with a "Pokémon not found" page and a link back. If a PokéAPI request fails for any other reason, an error boundary shows the message and a **Try again** button. A failure inside a single tab only replaces the right-hand screen, so the device and D-pad stay usable.
 - **Shareable URLs.** The Pokémon, the tab, and the sprite index (`?imageIndex=`) all live in the URL, so any view can be bookmarked or linked.
 - **Per-page metadata.** Each tab sets its own `<title>` and description, e.g. *"Charizard - Evolutions"*.
-- **JSON endpoint.** `GET /api/{name-or-id}` returns the same normalised Pokémon object the UI uses.
+- **JSON endpoint.** `GET /api/{name-or-id}` returns the same normalised Pokémon object the UI uses, or a 404 with `{ "error": "..." }` for an unknown Pokémon.
 
 ## Tech stack
 
@@ -120,14 +120,17 @@ Then open **http://localhost:3000** and pick a Pokémon with the D-pad. You can 
 
 The layout and every tab page call `getAllData` independently. Next.js's `fetch` request memoisation removes the duplicate network calls within a single render. The **Moves** tab is the exception: it reads `moves` straight from the base `/pokemon/{slug}` response with `apiSearch`, so it skips the extra ability, form, species and evolution requests.
 
-### Error boundaries
+### Not found and error handling
+
+When PokéAPI returns 404, `apiSearch` throws a `NotFoundError`. In pages and layouts, `withNotFound()` (used by `getAllData` and the Moves tab) turns it into Next's `notFound()`, so the response has a 404 status. The `/api/[slug]` route catches the same error and returns 404 JSON.
 
 | File | Scope |
 | --- | --- |
-| `src/app/pokedex/error.tsx` | Full-page fallback for anything under `/pokedex`, e.g. an unknown Pokémon in the layout fetch |
+| `src/app/pokedex/not-found.tsx` | "Pokémon not found" page for any unknown `/pokedex/[slug]/…` URL |
+| `src/app/pokedex/error.tsx` | Full-page fallback for any other failure under `/pokedex` |
 | `src/app/pokedex/[slug]/@screen/error.tsx` | Replaces only the right-hand screen when a single tab fails |
 
-Both log the error to the console and call Next's `reset()` when you press **Try again**.
+Both error boundaries log the error to the console and call Next's `reset()` when you press **Try again**.
 
 ### Navigation state
 
@@ -148,6 +151,7 @@ src/
 │   ├── pokedex/
 │   │   ├── page.tsx             Empty device shell
 │   │   ├── error.tsx            Full-page error boundary
+│   │   ├── not-found.tsx        404 page for unknown Pokémon
 │   │   └── [slug]/
 │   │       ├── layout.tsx       Fetches data, renders the device
 │   │       └── @screen/         Parallel-route tabs (overview, forms, games, abilities, moves, evolutions)
