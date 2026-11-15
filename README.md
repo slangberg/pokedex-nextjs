@@ -20,6 +20,7 @@ All data comes live from [PokéAPI](https://pokeapi.co/). The app has no databas
   - **Left / Right:** cycle through every sprite for the current Pokémon (official artwork first, then front/back, shiny, and per-generation variants).
   - The centre of the D-pad shows the current Pokédex number.
 - **Hint display.** A small screen under the main image tells you what each D-pad direction will do next.
+- **Search.** A dark screen panel under the keypad, with white **GO / ✕** buttons and a yellow light, styled after the parts in the reference drawing. Type a name to get up to 6 suggestions with their numbers, or a number for that exact Pokémon. Use ↑/↓ to choose and Enter or **GO** to open. The yellow light turns on when the search has a match.
 - **Data tabs**, each with its own URL:
 
   | Tab | Shows |
@@ -33,7 +34,7 @@ All data comes live from [PokéAPI](https://pokeapi.co/). The app has no databas
 
   The tab buttons are greyed out and can't be selected until you pick a Pokémon. The active tab is highlighted and marked with `aria-current="page"`.
 
-- **Responsive layout.** On desktop the two halves sit side by side at a fixed size. On small screens they stack, and the data screen fills the remaining height of the viewport.
+- **Responsive layout.** On desktop the two halves sit side by side at a fixed size. On small screens they stack, the tab keys get shorter, and the data screen fills the remaining height of the viewport. It never shrinks below 180px; on short phones the page scrolls instead.
 - **Accessible.** Focus outlines are clearly visible, animations are turned off when the OS asks for reduced motion, and the decorative lights and speaker grille are hidden from screen readers. Every D-pad button has a descriptive `aria-label`, and each data card gets its own unique `aria-labelledby`/`aria-describedby` IDs.
 - **Error handling.** An unknown name or number (e.g. `/pokedex/notapokemon`) returns a real **404** with a "Pokémon not found" page and a link back. If a PokéAPI request fails for any other reason, an error boundary shows the message and a **Try again** button. A failure inside a single tab only replaces the right-hand screen, so the device and D-pad stay usable.
 - **Shareable URLs.** The Pokémon, the tab, and the sprite index (`?imageIndex=`) all live in the URL, so any view can be bookmarked or linked.
@@ -139,6 +140,7 @@ Both error boundaries log the error to the console and call Next's `reset()` whe
 | D-pad up/down | Path segment `/pokedex/{name}/overview` | `usePokemonIndexes` in `src/utils/route.ts` |
 | D-pad left/right | Search param `?imageIndex=n` | `usePageIndex` / `usePokemonImageData` in `src/utils/route.ts` |
 | Tab buttons | Last path segment (`overview`, `forms`…) | `ButtonNav` / `MainNavLink` in `src/components/RightSide/` |
+| Search | Local input state; navigates to `/pokedex/{name}/overview` | `SearchBar` in `src/components/RightSide/search.bar.client.tsx` |
 
 ## Project structure
 
@@ -160,7 +162,7 @@ src/
 ├── components/
 │   ├── Global/                  MainLayout, indicator lights, display items
 │   ├── LeftSide/                Slideshow, D-pad, hint display
-│   └── RightSide/               Data screen, headings, tab buttons
+│   └── RightSide/               Data screen, headings, tab buttons, search bar
 ├── types/                       PokemonData, Species, Evolution, page prop types
 ├── utils/
 │   ├── api.ts                   PokéAPI fetching and normalisation
@@ -177,7 +179,7 @@ public/                          Metal and screen textures, Pokéball, Pokémon 
 - [x] Landing page at `/`
 - [x] Accessibility pass (focus outlines, reduced motion, ARIA labels)
 - [x] Error boundaries with retry
-- [ ] Search by name on the empty device screen
+- [x] Search by name or number
 - [ ] Moves detail (type, power, accuracy, and how/when each move is learned)
 - [ ] Play Pokémon cries (`sounds` is already in `PokemonData`)
 - [ ] An AI Pokédex assistant. There's an experimental LangChain/OpenAI agent in `src/actions/test.ts`, but the UI doesn't use it yet. It would need `OPENAI_API_KEY` and `TAVILY_API_KEY`.

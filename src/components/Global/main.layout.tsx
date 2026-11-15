@@ -7,6 +7,7 @@ interface AsideProps {
   children?: JSX.Element | undefined;
   mini?: JSX.Element;
   dpad: JSX.Element;
+  search?: JSX.Element;
 }
 
 // min-h-screen (not h-screen) so that on a viewport shorter than the device
@@ -20,25 +21,32 @@ const wrapperStyles = classNames(
   "flex-row"
 );
 
-// Mobile: fill the viewport so the data screen can take the remaining height.
+// Mobile: fill the viewport so the data screen can take the remaining height,
+// scrolling on short phones rather than squashing the screen below its minimum.
 // Desktop: shrink to the device's own height so the wrapper can center it.
 const containerStyles = classNames(
   "max-w-[100vw] md:min-w-[345px]",
   "width-full",
-  "h-screen overflow-hidden",
+  "h-screen overflow-y-auto overflow-x-hidden",
   "md:h-auto md:overflow-visible",
   "flex",
   "flex-col md:flex-row"
 );
 
-export default function MainLayout({ mini, left, children, dpad }: AsideProps) {
+export default function MainLayout({
+  mini,
+  left,
+  children,
+  dpad,
+  search,
+}: AsideProps) {
   return (
     <div className={wrapperStyles}>
       <div className={containerStyles}>
         <LeftSide mini={mini} dpad={dpad}>
           {left}
         </LeftSide>
-        <RightSide>{children}</RightSide>
+        <RightSide search={search}>{children}</RightSide>
       </div>
     </div>
   );

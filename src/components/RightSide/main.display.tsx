@@ -10,7 +10,7 @@ const containerStyles = classNames(
   "bg-screen bg-no-repeat bg-cover",
   "rounded-md",
   "shadow-inset-1",
-  "flex-1 min-h-0 md:flex-none md:h-[340px]",
+  "flex-1 min-h-[180px] md:flex-none md:h-[340px]",
   "pb-1 mb-2"
 );
 

@@ -5,6 +5,7 @@ import ClientSlideshow from "@/components/LeftSide/image.slideshow.client";
 import ClientDpad from "@/components/LeftSide/dpad.client";
 import { PokeResource } from "@/types/data";
 import LowerDisplayClient from "@/components/LeftSide/lower.display.client";
+import SearchBar from "@/components/RightSide/search.bar.client";
 
 // Layouts receive `params`, `children` and one prop per parallel-route slot
 // (`@screen`). They never receive `searchParams`.
@@ -31,6 +32,7 @@ export default async function PokemonPageLayout({
       left={<ClientSlideshow data={data.images} />}
       mini={<LowerDisplayClient images={data.images} pokemon={allPokemon} />}
       dpad={<ClientDpad images={data.images} pokemon={allPokemon} />}
+      search={<SearchBar pokemon={allPokemon} />}
     >
       {screen}
     </MainLayout>

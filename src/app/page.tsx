@@ -3,6 +3,7 @@ import { apiSearch } from "@/utils/api";
 import ClientDpad from "@/components/LeftSide/dpad.client";
 import { PokeResource } from "@/types/data";
 import LowerDisplayClient from "@/components/LeftSide/lower.display.client";
+import SearchBar from "@/components/RightSide/search.bar.client";
 
 // The D-pad and hint display read the URL with useSearchParams(), so this
 // page can't be prerendered at build time. Render it per request instead.
@@ -20,6 +21,7 @@ export default async function Home() {
       left={<p className="sr-only">Select a Pokémon to view its details</p>}
       mini={<LowerDisplayClient pokemon={allPokemon} />}
       dpad={<ClientDpad pokemon={allPokemon} />}
+      search={<SearchBar pokemon={allPokemon} />}
     >
       <></>
     </MainLayout>

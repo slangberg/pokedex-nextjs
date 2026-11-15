@@ -42,6 +42,14 @@
   border-bottom-right-radius: 5px;
 }
 
+/* Shorter keys on phones so the data screen keeps its room. */
+@media (max-width: 767px) {
+  .link {
+    height: 44px;
+    padding: 10px;
+  }
+}
+
 .disabled {
   background-color: #6b7280;
   color: #d1d5db;

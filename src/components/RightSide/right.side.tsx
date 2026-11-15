@@ -3,11 +3,14 @@ import MainDisplay from "./main.display";
 import classNames from "classnames";
 interface RightSide {
   children?: JSX.Element;
+  search?: JSX.Element;
 }
 
 const rightSideContainerStyles = classNames(
   "relative flex flex-col",
-  "flex-1 min-h-0",
+  // Mobile minimum fits a 180px data screen + tab keys + search row;
+  // below that the page scrolls instead of squashing the screen.
+  "flex-1 min-h-[360px] md:min-h-0",
   "bg-metal",
   "p-1 pl-0",
   "rounded-b-3xl md:rounded-bl-none",
@@ -44,7 +47,7 @@ const bodyStyles = classNames(
   "flex flex-col min-h-0"
 );
 
-export default function RightSide({ children }: RightSide) {
+export default function RightSide({ children, search }: RightSide) {
   return (
     <div className={rightSideContainerStyles}>
       <div className={cutoutStyles} />
@@ -52,6 +55,7 @@ export default function RightSide({ children }: RightSide) {
       <div className={bodyStyles}>
         <MainDisplay>{children}</MainDisplay>
         <ButtonNav />
+        {search}
       </div>
     </div>
   );
