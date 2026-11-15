@@ -4,6 +4,10 @@ import ClientDpad from "@/components/LeftSide/dpad.client";
 import { PokeResource } from "@/types/data";
 import LowerDisplayClient from "@/components/LeftSide/lower.display.client";
 
+// The D-pad and hint display read the URL with useSearchParams(), so this
+// page can't be prerendered at build time. Render it per request instead.
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const allPokemon = await apiSearch<PokeResource[]>({
     url: "https://pokeapi.co/api/v2/pokemon",

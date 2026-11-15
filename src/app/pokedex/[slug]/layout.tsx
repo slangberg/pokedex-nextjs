@@ -1,15 +1,17 @@
 import MainLayout from "@/components/Global/main.layout";
-import { BaseParams, ExtendedPageProps } from "@/types/page";
+import { BaseParams } from "@/types/page";
 import { apiSearch, getAllData } from "@/utils/api";
 import ClientSlideshow from "@/components/LeftSide/image.slideshow.client";
 import ClientDpad from "@/components/LeftSide/dpad.client";
-import { Metadata } from "next";
 import { PokeResource } from "@/types/data";
 import LowerDisplayClient from "@/components/LeftSide/lower.display.client";
 
-type LayoutProps = ExtendedPageProps & {
+// Layouts receive `params`, `children` and one prop per parallel-route slot
+// (`@screen`). They never receive `searchParams`.
+type LayoutProps = {
+  params: BaseParams;
+  children: React.ReactNode;
   screen: JSX.Element;
-  slideshow: JSX.Element;
 };
 
 export default async function PokemonPageLayout({
