@@ -12,9 +12,12 @@ interface AsideProps {
 
 // min-h-screen (not h-screen) so that on a viewport shorter than the device
 // the page grows and scrolls instead of clipping the top of the Pokédex.
+// md:pt-12 keeps the device clear of the fixed SiteHeader (h-12) and centers
+// it in the space below the header.
 const wrapperStyles = classNames(
   "w-screen",
   "min-h-screen",
+  "md:pt-12",
   "flex",
   "justify-center",
   "items-center",

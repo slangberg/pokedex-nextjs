@@ -34,6 +34,7 @@ All data comes live from [PokéAPI](https://pokeapi.co/). The app has no databas
 
   The tab buttons are greyed out and can't be selected until you pick a Pokémon. The active tab is highlighted and marked with `aria-current="page"`.
 
+- **Header.** A fixed bar at the top shows the "Pokédex" title in the Pokémon Solid font (yellow with a blue CSS text-stroke) and links to this GitHub repo. It's hidden on screens narrower than 768px.
 - **Responsive layout.** On desktop the two halves sit side by side at a fixed size. On small screens they stack, the tab keys get shorter, and the data screen fills the remaining height of the viewport. It never shrinks below 180px; on short phones the page scrolls instead.
 - **Accessible.** Focus outlines are clearly visible, animations are turned off when the OS asks for reduced motion, and the decorative lights and speaker grille are hidden from screen readers. Every D-pad button has a descriptive `aria-label`, and each data card gets its own unique `aria-labelledby`/`aria-describedby` IDs.
 - **Error handling.** An unknown name or number (e.g. `/notapokemon`) returns a real **404** with a "Pokémon not found" page and a link back. If a PokéAPI request fails for any other reason, an error boundary shows the message and a **Try again** button. A failure inside a single tab only replaces the right-hand screen, so the device and D-pad stay usable.
@@ -159,7 +160,7 @@ src/
 │   │       └── error.tsx        Screen-only error boundary
 │   └── api/[slug]/route.ts      JSON endpoint
 ├── components/
-│   ├── Global/                  MainLayout, indicator lights, display items
+│   ├── Global/                  MainLayout, site header, indicator lights, display items
 │   ├── LeftSide/                Slideshow, D-pad, hint display
 │   └── RightSide/               Data screen, headings, tab buttons, search bar
 ├── types/                       PokemonData, Species, Evolution, page prop types
@@ -168,8 +169,8 @@ src/
 │   ├── route.ts                 Client hooks for D-pad and slideshow state
 │   ├── data.ts                  Formatting helpers (pick, addSpaces, yes/no…)
 │   └── navigation.ts            Search-param helpers
-└── fonts.ts                     next/font Google font setup
-public/                          Metal and screen textures, Pokéball, Pokémon GB font
+└── fonts.ts                     next/font setup (Google fonts + local Pokémon Solid)
+public/                          Metal and screen textures, Pokéball, Pokémon GB and Pokémon Solid fonts
 ```
 
 ## Roadmap

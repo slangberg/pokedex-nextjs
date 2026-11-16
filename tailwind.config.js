@@ -9,6 +9,7 @@ module.exports = {
       fontFamily: {
         display: ["var(--dot-gothic)", "sans-serif"],
         heading: ["var(--nanum-gothic)", "sans-serif"],
+        pokemon: ["var(--pokemon-solid)", "sans-serif"],
       },
     },
     backgroundImage: {
